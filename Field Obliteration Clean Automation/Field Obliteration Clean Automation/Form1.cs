@@ -133,11 +133,6 @@ namespace Field_Obliteration_Clean_Automation
                                             
                                             doc.Save(writer);
                                             writer.Close();
-                                            XmlDocument helpdoc = new XmlDocument();
-                                            helpdoc.Load(pathCellfinal);
-                                            helpdoc.InnerXml = helpdoc.InnerXml.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                                            helpdoc.InnerXml = helpdoc.InnerXml.Replace("</ReportType>", "</ReportType>\r\n");
-                                            helpdoc.Save(pathCellfinal);
                                             bkr = true;
                                             break;
                                         }
@@ -170,11 +165,6 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
-                                        XmlDocument helpdoc = new XmlDocument();
-                                        helpdoc.Load(pathCellfinal);
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("</PermissionSet>", "</PermissionSet>\r\n");
-                                        helpdoc.Save(pathCellfinal);
                                         bkr = true;
                                         break;
                                     }
@@ -206,11 +196,6 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
-                                        XmlDocument helpdoc = new XmlDocument();
-                                        helpdoc.Load(pathCellfinal);
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("</Profile>", "</Profile>\r\n");
-                                        helpdoc.Save(pathCellfinal);
                                         bkr = true;
                                         break;
                                     }
@@ -242,11 +227,6 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
-                                        XmlDocument helpdoc = new XmlDocument();
-                                        helpdoc.Load(pathCellfinal);
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                                        helpdoc.InnerXml = helpdoc.InnerXml.Replace("</CustomObjectTranslation>", "</CustomObjectTranslation>\r\n");
-                                        helpdoc.Save(pathCellfinal);
                                         bkr = true;
                                         break;
                                     }
