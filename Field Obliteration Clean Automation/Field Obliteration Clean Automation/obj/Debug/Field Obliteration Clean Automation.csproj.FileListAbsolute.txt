@@ -1,0 +1,9 @@
+c:\users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.exe.config
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.exe
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.pdb
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.csprojResolveAssemblyReference.cache
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Form1.resources
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Properties.Resources.resources
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.csproj.GenerateResource.Cache
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.exe
+C:\Users\f.dandrea.lopez\documents\visual studio 2015\Projects\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.pdb
