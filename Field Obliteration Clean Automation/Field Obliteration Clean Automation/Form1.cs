@@ -130,9 +130,16 @@ namespace Field_Obliteration_Clean_Automation
                                                 CloseOutput = true
                                             };
                                             writer = XmlWriter.Create(pathCellfinal, settings);
-                                            
                                             doc.Save(writer);
                                             writer.Close();
+                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                            string xmlpart2 = xmlString.Substring(38);
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            {
+                                                sw.Write(xmlpart1 + xmlpart2);
+                                                sw.WriteLine("");
+                                            }
                                             bkr = true;
                                             break;
                                         }
@@ -165,6 +172,14 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
+                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                        string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                        string xmlpart2 = xmlString.Substring(38);
+                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                        {
+                                            sw.Write(xmlpart1 + xmlpart2);
+                                            sw.WriteLine("");
+                                        }
                                         bkr = true;
                                         break;
                                     }
@@ -196,6 +211,14 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
+                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                        string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                        string xmlpart2 = xmlString.Substring(38);
+                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                        {
+                                            sw.Write(xmlpart1 + xmlpart2);
+                                            sw.WriteLine("");
+                                        }
                                         bkr = true;
                                         break;
                                     }
@@ -227,6 +250,14 @@ namespace Field_Obliteration_Clean_Automation
                                         writer = XmlWriter.Create(pathCellfinal, settings);
                                         doc.Save(writer);
                                         writer.Close();
+                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                        string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                        string xmlpart2 = xmlString.Substring(38);
+                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                        {
+                                            sw.Write(xmlpart1 + xmlpart2);
+                                            sw.WriteLine("");
+                                        }
                                         bkr = true;
                                         break;
                                     }
