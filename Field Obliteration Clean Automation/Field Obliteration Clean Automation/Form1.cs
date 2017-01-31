@@ -46,30 +46,57 @@ namespace Field_Obliteration_Clean_Automation
                 DirectoryInfo[] dirs = root.GetDirectories();
                 foreach (DirectoryInfo dir in dirs)
                 {
-                    FileInfo[] files = dir.GetFiles();
-                    foreach (FileInfo file in files)
+                    if (dir.Name != "reports")
                     {
-                        StreamReader filestr = file.OpenText();
-                        string filetext = filestr.ReadToEnd();
-                        if (filetext.Contains("<ReportType"))
+                        FileInfo[] files = dir.GetFiles();
+                        foreach (FileInfo file in files)
                         {
-                            if (filetext.Contains("<field>" + field + "</field>"))
+                            StreamReader filestr = file.OpenText();
+                            string filetext = filestr.ReadToEnd();
+                            if (filetext.Contains("<ReportType"))
                             {
-                                dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                if (filetext.Contains(field + "</field>"))
+                                {
+                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                }
+                            }
+                            else if (filetext.Contains("<Profile") || filetext.Contains("<PermissionSet"))
+                            {
+                                if (filetext.Contains(field + "</field>"))
+                                {
+                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                }
+                            }
+                            else if (filetext.Contains("<CustomObjectTranslation"))
+                            {
+                                if (filetext.Contains(field + "</name>"))
+                                {
+                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                }
                             }
                         }
-                        else if (filetext.Contains("<Profile") || filetext.Contains("<PermissionSet"))
+                    }
+                    else
+                    {
+                        DirectoryInfo reportroot = new DirectoryInfo(dir.FullName);
+                        DirectoryInfo[] reportdirs = reportroot.GetDirectories();
+                        foreach (DirectoryInfo reportdir in reportdirs)
                         {
-                            if (filetext.Contains("." + field + "</field>"))
+                            if (reportdir.Name != "unfiled$public")
                             {
-                                dataGridView1.Rows.Add(false, file.Name, file.FullName);
-                            }
-                        }
-                        else if (filetext.Contains("<CustomObjectTranslation"))
-                        {
-                            if (filetext.Contains("<name>" + field + "</name>"))
-                            {
-                                dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                FileInfo[] reportfiles = reportdir.GetFiles();
+                                foreach (FileInfo reportfile in reportfiles)
+                                {
+                                    StreamReader reportfilestr = reportfile.OpenText();
+                                    string reportfiletext = reportfilestr.ReadToEnd();
+                                    if (reportfiletext.Contains("<Report"))
+                                    {
+                                        if (reportfiletext.Contains(field + "</field>"))
+                                        {
+                                            dataGridView1.Rows.Add(false, reportfile.Name, reportfile.FullName);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -115,7 +142,7 @@ namespace Field_Obliteration_Clean_Automation
                                     foreach (XmlElement nodo in NodeLista3)
                                     {
                                         XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText == field)
+                                        if (nField[0].InnerText.Contains(field))
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
@@ -160,6 +187,46 @@ namespace Field_Obliteration_Clean_Automation
                                         int pFrom = pathCell.IndexOf("\\src\\");
                                         String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
                                         System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\permissionsets");
+                                        XmlWriterSettings settings = new XmlWriterSettings
+                                        {
+                                            Encoding = Encoding.UTF8,
+                                            Indent = true,
+                                            IndentChars = "    ",
+                                            NewLineChars = "\r\n",
+                                            NewLineHandling = NewLineHandling.Replace,
+                                            CloseOutput = true
+                                        };
+                                        writer = XmlWriter.Create(pathCellfinal, settings);
+                                        doc.Save(writer);
+                                        writer.Close();
+                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                        string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+                                        string xmlpart2 = xmlString.Substring(38);
+                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                        {
+                                            sw.Write(xmlpart1 + xmlpart2);
+                                            sw.WriteLine("");
+                                        }
+                                        bkr = true;
+                                        break;
+                                    }
+                                    i++;
+                                }
+                            }
+                            else if (pathCell.Contains("\\reports\\"))
+                            {
+                                XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
+                                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
+                                foreach (XmlElement nodo in NodeLista2)
+                                {
+                                    XmlNodeList nField = nodo.GetElementsByTagName("field");
+                                    if (nField[0].InnerText.Contains("." + field))
+                                    {
+                                        nodo.ParentNode.RemoveChild(nodo);
+                                        int pFrom = pathCell.IndexOf("\\src\\");
+                                        String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
+                                        String reportFolder = pathCell.Substring(pFrom).Replace(row.Cells[1].Value.ToString(), "");
+                                        System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + reportFolder);
                                         XmlWriterSettings settings = new XmlWriterSettings
                                         {
                                             Encoding = Encoding.UTF8,
