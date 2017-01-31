@@ -257,6 +257,7 @@ namespace Field_Obliteration_Clean_Automation
                                         string removable2 = "-->\r\n        </";
                                         string removable3 = ">\r\n                <!--";
                                         string removable4 = "-->\r\n            </";
+                                        string removable5 = "\'";
                                         while (xmlpart2.Contains(removable1))
                                         {
                                             xmlpart2 = xmlpart2.Replace(removable1, "><!--");
@@ -272,6 +273,10 @@ namespace Field_Obliteration_Clean_Automation
                                         while (xmlpart2.Contains(removable4))
                                         {
                                             xmlpart2 = xmlpart2.Replace(removable4, "--></");
+                                        }
+                                        while (xmlpart2.Contains(removable5))
+                                        {
+                                            xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
                                         }
                                         using (StreamWriter sw = File.CreateText(pathCellfinal))
                                         {
