@@ -60,18 +60,18 @@ namespace Field_Obliteration_Clean_Automation
                         }
                         else if (filetext.Contains("<Profile") || filetext.Contains("<PermissionSet"))
                         {
-                            if (filetext.Contains("<field>" + component + "." + field + "</field>"))
+                            if (filetext.Contains("." + field + "</field>"))
                             {
                                 dataGridView1.Rows.Add(false, file.Name, file.FullName);
                             }
                         }
-                        /*else if (filetext.Contains("<CustomObjectTranslation"))
+                        else if (filetext.Contains("<CustomObjectTranslation"))
                         {
                             if (filetext.Contains("<name>" + field + "</name>"))
                             {
                                 dataGridView1.Rows.Add(false, file.Name, file.FullName);
                             }
-                        }*/
+                        }
                     }
                 }
                 Cursor.Current = Cursors.Default;
@@ -154,7 +154,7 @@ namespace Field_Obliteration_Clean_Automation
                                 foreach (XmlElement nodo in NodeLista2)
                                 {
                                     XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                    if (nField[0].InnerText == component + "." +  field)
+                                    if (nField[0].InnerText.Contains("." +  field))
                                     {
                                         nodo.ParentNode.RemoveChild(nodo);
                                         int pFrom = pathCell.IndexOf("\\src\\");
@@ -193,7 +193,7 @@ namespace Field_Obliteration_Clean_Automation
                                 foreach (XmlElement nodo in NodeLista2)
                                 {
                                     XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                    if (nField[0].InnerText == component + "." + field)
+                                    if (nField[0].InnerText.Contains("." + field))
                                     {
                                         nodo.ParentNode.RemoveChild(nodo);
                                         int pFrom = pathCell.IndexOf("\\src\\");
@@ -253,6 +253,26 @@ namespace Field_Obliteration_Clean_Automation
                                         string xmlString = System.IO.File.ReadAllText(pathCellfinal);
                                         string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                         string xmlpart2 = xmlString.Substring(38);
+                                        string removable1 = ">\r\n            <!--";
+                                        string removable2 = "-->\r\n        </";
+                                        string removable3 = ">\r\n                <!--";
+                                        string removable4 = "-->\r\n            </";
+                                        while (xmlpart2.Contains(removable1))
+                                        {
+                                            xmlpart2 = xmlpart2.Replace(removable1, "><!--");
+                                        }
+                                        while (xmlpart2.Contains(removable2))
+                                        {
+                                            xmlpart2 = xmlpart2.Replace(removable2, "--></");
+                                        }
+                                        while (xmlpart2.Contains(removable3))
+                                        {
+                                            xmlpart2 = xmlpart2.Replace(removable3, "><!--");
+                                        }
+                                        while (xmlpart2.Contains(removable4))
+                                        {
+                                            xmlpart2 = xmlpart2.Replace(removable4, "--></");
+                                        }
                                         using (StreamWriter sw = File.CreateText(pathCellfinal))
                                         {
                                             sw.Write(xmlpart1 + xmlpart2);
