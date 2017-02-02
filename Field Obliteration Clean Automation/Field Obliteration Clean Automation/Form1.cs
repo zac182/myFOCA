@@ -52,26 +52,56 @@ namespace Field_Obliteration_Clean_Automation
                         foreach (FileInfo file in files)
                         {
                             StreamReader filestr = file.OpenText();
-                            string filetext = filestr.ReadToEnd();
-                            if (filetext.Contains("<ReportType"))
+                            string fileline;
+                            while ((fileline = filestr.ReadLine()) != null)
                             {
-                                if (filetext.Contains(field + "</field>"))
+                                if (fileline.Contains("<ReportType"))
                                 {
-                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                    while ((fileline = filestr.ReadLine()) != null)
+                                    {
+                                        if (fileline.Contains(field + "</field>"))
+                                        {
+                                            string match = "Parcial Match";
+                                            if (fileline.Contains(component + "." + field + "</field>"))
+                                            {
+                                                match = "Full Match";
+                                            }
+                                            dataGridView1.Rows.Add(false, file.Name, match, fileline, file.FullName);
+                                            break;
+                                        }
+                                    }
                                 }
-                            }
-                            else if (filetext.Contains("<Profile") || filetext.Contains("<PermissionSet"))
-                            {
-                                if (filetext.Contains(field + "</field>"))
+                                else if (fileline.Contains("<Profile") || fileline.Contains("<PermissionSet"))
                                 {
-                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                    while ((fileline = filestr.ReadLine()) != null)
+                                    {
+                                        if (fileline.Contains(field + "</field>"))
+                                        {
+                                            string match = "Parcial Match";
+                                            if (fileline.Contains(component + "." + field + "</field>"))
+                                            {
+                                                match = "Full Match";
+                                            }
+                                            dataGridView1.Rows.Add(false, file.Name, match, fileline, file.FullName);
+                                            break;
+                                        }
+                                    }
                                 }
-                            }
-                            else if (filetext.Contains("<CustomObjectTranslation"))
-                            {
-                                if (filetext.Contains(field + "</name>"))
+                                else if (fileline.Contains("<CustomObjectTranslation"))
                                 {
-                                    dataGridView1.Rows.Add(false, file.Name, file.FullName);
+                                    while ((fileline = filestr.ReadLine()) != null)
+                                    {
+                                        if (fileline.Contains(field + "</name>"))
+                                        {
+                                            string match = "Parcial Match";
+                                            if (fileline.Contains(component + "." + field + "</name>"))
+                                            {
+                                                match = "Full Match";
+                                            }
+                                            dataGridView1.Rows.Add(false, file.Name, match, fileline, file.FullName);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -88,12 +118,24 @@ namespace Field_Obliteration_Clean_Automation
                                 foreach (FileInfo reportfile in reportfiles)
                                 {
                                     StreamReader reportfilestr = reportfile.OpenText();
-                                    string reportfiletext = reportfilestr.ReadToEnd();
-                                    if (reportfiletext.Contains("<Report"))
+                                    string reportfileline;
+                                    while ((reportfileline = reportfilestr.ReadLine()) != null)
                                     {
-                                        if (reportfiletext.Contains(field + "</field>"))
+                                        if (reportfileline.Contains("<Report"))
                                         {
-                                            dataGridView1.Rows.Add(false, reportfile.Name, reportfile.FullName);
+                                            while ((reportfileline = reportfilestr.ReadLine()) != null)
+                                            {
+                                                if (reportfileline.Contains(field + "</field>"))
+                                                {
+                                                    string match = "Parcial Match";
+                                                    if (reportfileline.Contains(component + "." + field + "</field>"))
+                                                    {
+                                                        match = "Full Match";
+                                                    }
+                                                    dataGridView1.Rows.Add(false, reportfile.Name, match, reportfileline, reportfile.FullName);
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
                                 }

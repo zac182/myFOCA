@@ -33,6 +33,8 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Checkbox = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Component = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Match = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MatchedLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button2 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -75,6 +77,8 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Checkbox,
             this.Component,
+            this.Match,
+            this.MatchedLine,
             this.Path});
             this.dataGridView1.Location = new System.Drawing.Point(12, 38);
             this.dataGridView1.Name = "dataGridView1";
@@ -93,7 +97,19 @@
             this.Component.HeaderText = "Component";
             this.Component.Name = "Component";
             this.Component.ReadOnly = true;
-            this.Component.Width = 86;
+            this.Component.Width = 86;// 
+            // Component
+            // 
+            this.Match.HeaderText = "Match";
+            this.Match.Name = "Match";
+            this.Match.ReadOnly = true;
+            this.Match.Width = 86;// 
+            // Component
+            // 
+            this.MatchedLine.HeaderText = "MatchedLine";
+            this.MatchedLine.Name = "MatchedLine";
+            this.MatchedLine.ReadOnly = true;
+            this.MatchedLine.Width = 86;
             // 
             // Path
             // 
@@ -190,6 +206,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn CheckBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn Component;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Match;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MatchedLine;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Checkbox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
