@@ -162,6 +162,7 @@ namespace Field_Obliteration_Clean_Automation
             }
             if (dataGridView1.RowCount != 0 && textBox1.TextLength != 0)
             {
+                toolStripStatusLabel1.Text = "Total files found: " + dataGridView1.RowCount;
                 pictureBox1.Hide();
                 pictureBox2.Hide();
                 button2.Enabled = true;
@@ -170,6 +171,7 @@ namespace Field_Obliteration_Clean_Automation
             }
             else
             {
+                toolStripStatusLabel1.Text = "Total files found: 0";
                 pictureBox1.Show();
                 pictureBox2.Show();
                 button2.Enabled = false;
