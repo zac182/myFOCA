@@ -58,7 +58,7 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     if (fileline.Contains(field + "</field>"))
                                     {
-                                        string match = "Parcial";
+                                        string match = "Partial";
                                         if (fileline.Contains(component + "." + field + "</field>"))
                                         {
                                             match = "Full";
@@ -75,7 +75,7 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     if (fileline.Contains(field + "</field>"))
                                     {
-                                        string match = "Parcial";
+                                        string match = "Partial";
                                         if (fileline.Contains(component + "." + field + "</field>"))
                                         {
                                             match = "Full";
@@ -92,7 +92,7 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     if (fileline.Contains(field + "</field>"))
                                     {
-                                        string match = "Parcial";
+                                        string match = "Partial";
                                         if (fileline.Contains(component + "." + field + "</field>"))
                                         {
                                             match = "Full";
@@ -109,7 +109,7 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     if (fileline.Contains(field + "</name>"))
                                     {
-                                        string match = "Parcial";
+                                        string match = "Partial";
                                         if (fileline.Contains(component + "." + field + "</name>"))
                                         {
                                             match = "Full";
@@ -144,7 +144,7 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             if (reportfileline.Contains(field + "</field>"))
                                             {
-                                                string match = "Parcial";
+                                                string match = "Partial";
                                                 if (reportfileline.Contains(component + "." + field + "</field>"))
                                                 {
                                                     match = "Full";
