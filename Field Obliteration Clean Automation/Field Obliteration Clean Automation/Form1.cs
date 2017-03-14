@@ -13,6 +13,7 @@ using System.Configuration;
 
 namespace Field_Obliteration_Clean_Automation
 {
+    //RC 1.0.20170314
     public partial class Form1 : Form
     {
         public static int i = 0;
