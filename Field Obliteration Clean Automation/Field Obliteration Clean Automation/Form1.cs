@@ -37,7 +37,7 @@ namespace Field_Obliteration_Clean_Automation
             Task.Delay(2000);
             dataGridView1.Rows.Clear();
             List<XmlDocument> docs = new List<XmlDocument>();
-            string field = textBox1.Text;
+            string field = textBox1.Text.Trim();
             string component = textBox2.Text;
             DirectoryInfo root = new DirectoryInfo(textBox3.Text);
             DirectoryInfo[] dirs = root.GetDirectories();
@@ -197,7 +197,7 @@ namespace Field_Obliteration_Clean_Automation
                         if (dataGridView1.Rows.Count != 0)
                         {
                             bool chkboxtrue = false;
-                            string field = textBox1.Text;
+                            string field = textBox1.Text.Trim();
                             string component = textBox2.Text;
                             foreach (DataGridViewRow row in dataGridView1.Rows)
                             {
@@ -457,7 +457,7 @@ namespace Field_Obliteration_Clean_Automation
                     if (dataGridView1.Rows.Count != 0)
                     {
                         bool chkboxtrue = false;
-                        string field = textBox1.Text;
+                        string field = textBox1.Text.Trim();
                         string component = textBox2.Text;
                         foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
@@ -735,7 +735,7 @@ namespace Field_Obliteration_Clean_Automation
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (textBox1.TextLength != 0 && textBox1.Text.Substring(textBox1.TextLength - 3, 3) == "__c")
+            if (textBox1.TextLength != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) == "__c")
             {
                 DialogResult result = folderBrowserDialog1.ShowDialog(); // Show the dialog.
                 if (result == DialogResult.OK && folderBrowserDialog1.SelectedPath.Substring(folderBrowserDialog1.SelectedPath.Length - 3, 3) == "src") // Test result.
@@ -750,14 +750,37 @@ namespace Field_Obliteration_Clean_Automation
                     button5_Click(sender, e);
                 }
             }
-            else if (textBox1.TextLength != 0 && textBox1.Text.Substring(textBox1.TextLength - 3, 3) != "__c")
+            else if (textBox1.TextLength != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) != "__c")
             {
-                MessageBox.Show("The fiellld to be deleted must be a Custom Field", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The field to be deleted must be a Custom Field", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 MessageBox.Show("Write the field to be deleted first", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
+        }
+        /*private void findFiles()
+{
+while ((fileline = filestr.ReadLine()) != null)
+{
+if (fileline.Contains(field + "</field>"))
+{
+  string match = "Partial";
+  if (fileline.Contains(component + "." + field + "</field>"))
+  {
+      match = "Full";
+  }
+  string fileName = file.Name.Replace(".reportType", "");
+  dataGridView1.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+  break;
+}
+}
+}*/
     }
 }
