@@ -33,12 +33,12 @@ namespace Field_Obliteration_Clean_Automation
         private void button1_Click(object sender, EventArgs e)
         {
             i = 0;
+            dataGridView1.Rows.Clear();
             Cursor.Current = Cursors.WaitCursor;
             Task.Delay(2000);
-            dataGridView1.Rows.Clear();
             List<XmlDocument> docs = new List<XmlDocument>();
             string field = textBox1.Text.Trim();
-            string component = textBox2.Text;
+            string component = textBox2.Text.Trim();
             DirectoryInfo root = new DirectoryInfo(textBox3.Text);
             DirectoryInfo[] dirs = root.GetDirectories();
             foreach (DirectoryInfo dir in dirs)
@@ -59,7 +59,7 @@ namespace Field_Obliteration_Clean_Automation
                                     if (fileline.Contains(field + "</field>"))
                                     {
                                         string match = "Partial";
-                                        if (fileline.Contains(component + "." + field + "</field>"))
+                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
                                         {
                                             match = "Full";
                                         }
@@ -76,7 +76,7 @@ namespace Field_Obliteration_Clean_Automation
                                     if (fileline.Contains(field + "</field>"))
                                     {
                                         string match = "Partial";
-                                        if (fileline.Contains(component + "." + field + "</field>"))
+                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
                                         {
                                             match = "Full";
                                         }
@@ -93,7 +93,7 @@ namespace Field_Obliteration_Clean_Automation
                                     if (fileline.Contains(field + "</field>"))
                                     {
                                         string match = "Partial";
-                                        if (fileline.Contains(component + "." + field + "</field>"))
+                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
                                         {
                                             match = "Full";
                                         }
@@ -110,7 +110,7 @@ namespace Field_Obliteration_Clean_Automation
                                     if (fileline.Contains(field + "</name>"))
                                     {
                                         string match = "Partial";
-                                        if (fileline.Contains(component + "." + field + "</name>"))
+                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
                                         {
                                             match = "Full";
                                         }
@@ -145,7 +145,7 @@ namespace Field_Obliteration_Clean_Automation
                                             if (reportfileline.Contains(field + "</field>"))
                                             {
                                                 string match = "Partial";
-                                                if (reportfileline.Contains(component + "." + field + "</field>"))
+                                                if (reportfileline.Equals("<field>" +component + "." + field + "</field>"))
                                                 {
                                                     match = "Full";
                                                 }
@@ -198,7 +198,7 @@ namespace Field_Obliteration_Clean_Automation
                         {
                             bool chkboxtrue = false;
                             string field = textBox1.Text.Trim();
-                            string component = textBox2.Text;
+                            string component = textBox2.Text.Trim();
                             foreach (DataGridViewRow row in dataGridView1.Rows)
                             {
                                 DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
@@ -458,7 +458,7 @@ namespace Field_Obliteration_Clean_Automation
                     {
                         bool chkboxtrue = false;
                         string field = textBox1.Text.Trim();
-                        string component = textBox2.Text;
+                        string component = textBox2.Text.Trim();
                         foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
                             DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
