@@ -110,7 +110,7 @@ namespace Field_Obliteration_Clean_Automation
                                     if (fileline.Contains(field + "</name>"))
                                     {
                                         string match = "Partial";
-                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
+                                        if (fileline.Contains("<name>" + field + "</name>"))
                                         {
                                             match = "Full";
                                         }
@@ -145,7 +145,7 @@ namespace Field_Obliteration_Clean_Automation
                                             if (reportfileline.Contains(field + "</field>"))
                                             {
                                                 string match = "Partial";
-                                                if (reportfileline.Equals("<field>" +component + "." + field + "</field>"))
+                                                if (reportfileline.Contains("<field>" +component + "." + field + "</field>"))
                                                 {
                                                     match = "Full";
                                                 }
@@ -735,7 +735,7 @@ namespace Field_Obliteration_Clean_Automation
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (textBox1.TextLength != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) == "__c")
+            if (textBox1.Text.Trim().Length != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) == "__c" && textBox2.Text.Trim().Length != 0)
             {
                 DialogResult result = folderBrowserDialog1.ShowDialog(); // Show the dialog.
                 if (result == DialogResult.OK && folderBrowserDialog1.SelectedPath.Substring(folderBrowserDialog1.SelectedPath.Length - 3, 3) == "src") // Test result.
@@ -750,13 +750,31 @@ namespace Field_Obliteration_Clean_Automation
                     button5_Click(sender, e);
                 }
             }
-            else if (textBox1.TextLength != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) != "__c")
+            else if (textBox1.Text.Trim().Length != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) != "__c")
             {
-                MessageBox.Show("The field to be deleted must be a Custom Field", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (textBox2.Text.Trim().Length == 0)
+                {
+                    MessageBox.Show("The field to be deleted must be a Custom Field\r\nMust define object", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("The field to be deleted must be a Custom Field", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else if (textBox1.Text.Trim().Length == 0)
+            {
+                if (textBox2.Text.Trim().Length == 0)
+                {
+                    MessageBox.Show("Must define field to be deleted\r\nMust define object", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Must define field to be deleted", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
-                MessageBox.Show("Write the field to be deleted first", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Must define object", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
