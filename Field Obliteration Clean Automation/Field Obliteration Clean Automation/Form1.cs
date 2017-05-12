@@ -780,8 +780,9 @@ namespace Field_Obliteration_Clean_Automation
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-            MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
+            Form2 about = new Form2();
+            about.ShowDialog();
+            //MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
         }
         /*private void findFiles()
 {
@@ -789,14 +790,14 @@ while ((fileline = filestr.ReadLine()) != null)
 {
 if (fileline.Contains(field + "</field>"))
 {
-  string match = "Partial";
-  if (fileline.Contains(component + "." + field + "</field>"))
-  {
-      match = "Full";
-  }
-  string fileName = file.Name.Replace(".reportType", "");
-  dataGridView1.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-  break;
+string match = "Partial";
+if (fileline.Contains(component + "." + field + "</field>"))
+{
+match = "Full";
+}
+string fileName = file.Name.Replace(".reportType", "");
+dataGridView1.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+break;
 }
 }
 }*/

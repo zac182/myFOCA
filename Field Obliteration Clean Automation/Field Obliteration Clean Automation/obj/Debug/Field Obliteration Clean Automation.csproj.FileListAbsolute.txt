@@ -20,3 +20,4 @@ C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.application
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.exe.manifest
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.application
+C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Form2.resources

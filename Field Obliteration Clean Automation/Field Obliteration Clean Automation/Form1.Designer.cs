@@ -68,9 +68,10 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(778, 619);
+            this.button1.Location = new System.Drawing.Point(906, 653);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 39);
+            this.button1.Size = new System.Drawing.Size(117, 54);
             this.button1.TabIndex = 5;
             this.button1.Text = "Search Field";
             this.button1.UseVisualStyleBackColor = true;
@@ -78,9 +79,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(90, 27);
+            this.textBox1.Location = new System.Drawing.Point(105, 37);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(306, 20);
+            this.textBox1.Size = new System.Drawing.Size(356, 21);
             this.textBox1.TabIndex = 1;
             // 
             // dataGridView1
@@ -102,12 +104,13 @@
             this.Match,
             this.MatchedLine,
             this.Path});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 114);
+            this.dataGridView1.Location = new System.Drawing.Point(14, 158);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(972, 497);
+            this.dataGridView1.Size = new System.Drawing.Size(1134, 488);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.TabStop = false;
             // 
@@ -115,50 +118,51 @@
             // 
             this.Checkbox.HeaderText = "Checkbox";
             this.Checkbox.Name = "Checkbox";
-            this.Checkbox.Width = 61;
+            this.Checkbox.Width = 68;
             // 
             // Component
             // 
             this.Component.HeaderText = "Component";
             this.Component.Name = "Component";
             this.Component.ReadOnly = true;
-            this.Component.Width = 86;
+            this.Component.Width = 96;
             // 
             // Type
             // 
             this.Type.HeaderText = "Type";
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
-            this.Type.Width = 56;
+            this.Type.Width = 59;
             // 
             // Match
             // 
             this.Match.HeaderText = "Match";
             this.Match.Name = "Match";
             this.Match.ReadOnly = true;
-            this.Match.Width = 62;
+            this.Match.Width = 68;
             // 
             // MatchedLine
             // 
             this.MatchedLine.HeaderText = "MatchedLine";
             this.MatchedLine.Name = "MatchedLine";
             this.MatchedLine.ReadOnly = true;
-            this.MatchedLine.Width = 94;
+            this.MatchedLine.Width = 105;
             // 
             // Path
             // 
             this.Path.HeaderText = "Path";
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
-            this.Path.Width = 54;
+            this.Path.Width = 57;
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(884, 619);
+            this.button2.Location = new System.Drawing.Point(1031, 653);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 39);
+            this.button2.Size = new System.Drawing.Size(117, 54);
             this.button2.TabIndex = 6;
             this.button2.Text = "Delete references";
             this.button2.UseVisualStyleBackColor = true;
@@ -167,17 +171,18 @@
             // textBox2
             // 
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(624, 27);
+            this.textBox2.Location = new System.Drawing.Point(728, 37);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(307, 20);
+            this.textBox2.Size = new System.Drawing.Size(357, 21);
             this.textBox2.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 30);
+            this.label1.Location = new System.Drawing.Point(14, 42);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.Size = new System.Drawing.Size(85, 18);
             this.label1.TabIndex = 5;
             this.label1.Text = "Field Deleted:";
             // 
@@ -185,9 +190,9 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(577, 30);
+            this.label2.Location = new System.Drawing.Point(673, 42);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.Size = new System.Drawing.Size(51, 18);
             this.label2.TabIndex = 6;
             this.label2.Text = "Object:";
             // 
@@ -195,9 +200,10 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(15, 619);
+            this.button3.Location = new System.Drawing.Point(12, 653);
+            this.button3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 39);
+            this.button3.Size = new System.Drawing.Size(117, 54);
             this.button3.TabIndex = 3;
             this.button3.Text = "Select All";
             this.button3.UseVisualStyleBackColor = true;
@@ -207,9 +213,10 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(121, 619);
+            this.button4.Location = new System.Drawing.Point(135, 653);
+            this.button4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(100, 39);
+            this.button4.Size = new System.Drawing.Size(117, 54);
             this.button4.TabIndex = 4;
             this.button4.Text = "Unselect All";
             this.button4.UseVisualStyleBackColor = true;
@@ -221,9 +228,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Location = new System.Drawing.Point(15, 53);
+            this.groupBox1.Location = new System.Drawing.Point(17, 73);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(969, 55);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox1.Size = new System.Drawing.Size(1130, 76);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Path";
@@ -232,9 +241,10 @@
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.Location = new System.Drawing.Point(938, 17);
+            this.button5.Location = new System.Drawing.Point(1094, 24);
+            this.button5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(25, 25);
+            this.button5.Size = new System.Drawing.Size(29, 35);
             this.button5.TabIndex = 1;
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -243,10 +253,11 @@
             // 
             this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(6, 20);
+            this.textBox3.Location = new System.Drawing.Point(7, 28);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(926, 20);
+            this.textBox3.Size = new System.Drawing.Size(1080, 21);
             this.textBox3.TabIndex = 0;
             // 
             // pictureBox1
@@ -256,9 +267,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.ErrorImage = null;
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 114);
+            this.pictureBox1.Location = new System.Drawing.Point(14, 158);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(972, 497);
+            this.pictureBox1.Size = new System.Drawing.Size(1134, 488);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
@@ -269,9 +281,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
             this.pictureBox2.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.InitialImage")));
-            this.pictureBox2.Location = new System.Drawing.Point(351, 142);
+            this.pictureBox2.Location = new System.Drawing.Point(409, 158);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(313, 358);
+            this.pictureBox2.Size = new System.Drawing.Size(365, 488);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox2.TabIndex = 10;
             this.pictureBox2.TabStop = false;
@@ -281,18 +294,19 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(435, 642);
+            this.label3.Location = new System.Drawing.Point(507, 889);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.Size = new System.Drawing.Size(0, 18);
             this.label3.TabIndex = 11;
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 661);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 711);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(998, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1164, 22);
             this.statusStrip1.TabIndex = 12;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -307,22 +321,23 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(998, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
+            this.menuStrip1.Size = new System.Drawing.Size(1164, 25);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 19);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(998, 683);
+            this.ClientSize = new System.Drawing.Size(1164, 733);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.label3);
@@ -338,9 +353,11 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView1);
+            this.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
             this.Text = "F.O.C.A.";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
