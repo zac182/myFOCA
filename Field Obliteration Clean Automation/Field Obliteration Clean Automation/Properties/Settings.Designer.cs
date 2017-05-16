@@ -22,5 +22,17 @@ namespace Field_Obliteration_Clean_Automation.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathReminder {
+            get {
+                return ((string)(this["PathReminder"]));
+            }
+            set {
+                this["PathReminder"] = value;
+            }
+        }
     }
 }

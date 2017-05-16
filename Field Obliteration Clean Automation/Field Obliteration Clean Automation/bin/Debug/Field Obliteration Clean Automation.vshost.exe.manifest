@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Field Obliteration Clean Automation.exe" size="248280">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Field Obliteration Clean Automation.exe" size="255960">
       <assemblyIdentity name="Field Obliteration Clean Automation" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Du0qLZNPeOzL9nbNOrcYa3pQO/zgKCOOoECivoPvkY0=</dsig:DigestValue>
+        <dsig:DigestValue>X8WbKK+2c8hjWv7ER9NILBRjgRxcJSBzLfvoLf9h0Ts=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -63,13 +63,13 @@
       <dsig:DigestValue>k+SIDDc8l1wj4Pzpc3c5pvIr/2OI3i8o2i0ghGcHqeY=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Field Obliteration Clean Automation.exe.config" size="186">
+  <file name="Field Obliteration Clean Automation.exe.config" size="992">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>E5pe1Moh3SVgq+7c6PIBn640UkkP2CXKbE7OhyMoiNs=</dsig:DigestValue>
+      <dsig:DigestValue>uj4CtTTsoGOhoi370OESrTV0dBuI8yw3zgBveZSxLIg=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

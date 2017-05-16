@@ -22,5 +22,10 @@ namespace Field_Obliteration_Clean_Automation
         {
             System.Diagnostics.Process.Start("mailto:f.dandrea.lopez@accenture.com?subject=FOCA App: Improvement Report");
         }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://p.yusukekamiyamane.com/");
+        }
     }
 }
