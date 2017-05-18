@@ -801,20 +801,23 @@ namespace Field_Obliteration_Clean_Automation
 
         private void previewDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewSelectedRowCollection rowPrev = MainDGV.SelectedRows;
-            if (rowPrev.Count != 1)
+            if (e.RowIndex != -1)
             {
-                MessageBox.Show("Please select only one row", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                DataGridViewTextBoxCell matchline = rowPrev[0].Cells[4] as DataGridViewTextBoxCell;
-                DataGridViewTextBoxCell path = rowPrev[0].Cells[5] as DataGridViewTextBoxCell;
-                DataGridViewTextBoxCell component = rowPrev[0].Cells[1] as DataGridViewTextBoxCell;
-                PreviewForm preview = new PreviewForm();
-                string prev = rowPrev.ToString();
-                preview.previewTextBoxLoad(sender, e, matchline.Value.ToString(), component.Value.ToString(), path.Value.ToString());
-                preview.ShowDialog();
+                DataGridViewSelectedRowCollection rowPrev = MainDGV.SelectedRows;
+                if (rowPrev.Count != 1)
+                {
+                    MessageBox.Show("Please select only one row", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    DataGridViewTextBoxCell matchline = rowPrev[0].Cells[4] as DataGridViewTextBoxCell;
+                    DataGridViewTextBoxCell path = rowPrev[0].Cells[5] as DataGridViewTextBoxCell;
+                    DataGridViewTextBoxCell component = rowPrev[0].Cells[1] as DataGridViewTextBoxCell;
+                    PreviewForm preview = new PreviewForm();
+                    string prev = rowPrev.ToString();
+                    preview.previewTextBoxLoad(sender, e, matchline.Value.ToString(), component.Value.ToString(), path.Value.ToString());
+                    preview.ShowDialog();
+                }
             }
         }
 
@@ -870,6 +873,7 @@ namespace Field_Obliteration_Clean_Automation
             Path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             Path.Width = widthph;
         }
+
     }
 
         /*private void findFiles()
