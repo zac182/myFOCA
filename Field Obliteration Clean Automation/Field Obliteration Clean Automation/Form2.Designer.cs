@@ -1,6 +1,6 @@
 ﻿namespace Field_Obliteration_Clean_Automation
 {
-    partial class Form2
+    partial class AboutForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,137 +28,137 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
+            this.MainImg = new System.Windows.Forms.PictureBox();
+            this.AppNameLabel = new System.Windows.Forms.Label();
+            this.VersionLabel = new System.Windows.Forms.Label();
+            this.DeveloperLabel = new System.Windows.Forms.Label();
+            this.SpecialThanksLabel = new System.Windows.Forms.Label();
+            this.EmailLabel = new System.Windows.Forms.Label();
+            this.EmailLink = new System.Windows.Forms.LinkLabel();
+            this.IconAttributeLabel = new System.Windows.Forms.Label();
+            this.IconAttributeLink = new System.Windows.Forms.LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox2
+            // MainImg
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.InitialImage")));
-            this.pictureBox2.Location = new System.Drawing.Point(12, 24);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(165, 165);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 11;
-            this.pictureBox2.TabStop = false;
+            this.MainImg.Image = ((System.Drawing.Image)(resources.GetObject("MainImg.Image")));
+            this.MainImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("MainImg.InitialImage")));
+            this.MainImg.Location = new System.Drawing.Point(12, 24);
+            this.MainImg.Name = "MainImg";
+            this.MainImg.Size = new System.Drawing.Size(165, 165);
+            this.MainImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.MainImg.TabIndex = 11;
+            this.MainImg.TabStop = false;
             // 
-            // label1
+            // AppNameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(187, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(205, 18);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Field Obliteration Clean Automation";
+            this.AppNameLabel.AutoSize = true;
+            this.AppNameLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AppNameLabel.Location = new System.Drawing.Point(187, 19);
+            this.AppNameLabel.Name = "AppNameLabel";
+            this.AppNameLabel.Size = new System.Drawing.Size(205, 18);
+            this.AppNameLabel.TabIndex = 12;
+            this.AppNameLabel.Text = "Field Obliteration Clean Automation";
             // 
-            // label3
+            // VersionLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(187, 45);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 18);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Version: 1.0";
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.Location = new System.Drawing.Point(187, 45);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(72, 18);
+            this.VersionLabel.TabIndex = 14;
+            this.VersionLabel.Text = "Version: 1.0";
             // 
-            // label5
+            // DeveloperLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(187, 71);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(220, 18);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Developed by D\'Andrea López, Fabrizio";
+            this.DeveloperLabel.AutoSize = true;
+            this.DeveloperLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeveloperLabel.Location = new System.Drawing.Point(187, 71);
+            this.DeveloperLabel.Name = "DeveloperLabel";
+            this.DeveloperLabel.Size = new System.Drawing.Size(220, 18);
+            this.DeveloperLabel.TabIndex = 16;
+            this.DeveloperLabel.Text = "Developed by D\'Andrea López, Fabrizio";
             // 
-            // label7
+            // SpecialThanksLabel
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(187, 97);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(239, 18);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Special Thanks to MMS Ops Dev ADC Team";
+            this.SpecialThanksLabel.AutoSize = true;
+            this.SpecialThanksLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SpecialThanksLabel.Location = new System.Drawing.Point(187, 97);
+            this.SpecialThanksLabel.Name = "SpecialThanksLabel";
+            this.SpecialThanksLabel.Size = new System.Drawing.Size(239, 18);
+            this.SpecialThanksLabel.TabIndex = 18;
+            this.SpecialThanksLabel.Text = "Special Thanks to MMS Ops Dev ADC Team";
             // 
-            // label9
+            // EmailLabel
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(187, 123);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(250, 18);
-            this.label9.TabIndex = 20;
-            this.label9.Text = "For bugs or improvements send an email to:";
+            this.EmailLabel.AutoSize = true;
+            this.EmailLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EmailLabel.Location = new System.Drawing.Point(187, 123);
+            this.EmailLabel.Name = "EmailLabel";
+            this.EmailLabel.Size = new System.Drawing.Size(250, 18);
+            this.EmailLabel.TabIndex = 20;
+            this.EmailLabel.Text = "For bugs or improvements send an email to:";
             // 
-            // linkLabel1
+            // EmailLink
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel1.Location = new System.Drawing.Point(187, 149);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(188, 18);
-            this.linkLabel1.TabIndex = 21;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "f.dandrea.lopez@accenture.com";
-            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Blue;
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.EmailLink.AutoSize = true;
+            this.EmailLink.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EmailLink.Location = new System.Drawing.Point(187, 149);
+            this.EmailLink.Name = "EmailLink";
+            this.EmailLink.Size = new System.Drawing.Size(188, 18);
+            this.EmailLink.TabIndex = 21;
+            this.EmailLink.TabStop = true;
+            this.EmailLink.Text = "f.dandrea.lopez@accenture.com";
+            this.EmailLink.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.EmailLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // label2
+            // IconAttributeLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(187, 175);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(87, 18);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Some icons by";
+            this.IconAttributeLabel.AutoSize = true;
+            this.IconAttributeLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IconAttributeLabel.Location = new System.Drawing.Point(187, 175);
+            this.IconAttributeLabel.Name = "IconAttributeLabel";
+            this.IconAttributeLabel.Size = new System.Drawing.Size(87, 18);
+            this.IconAttributeLabel.TabIndex = 22;
+            this.IconAttributeLabel.Text = "Some icons by";
             // 
-            // linkLabel2
+            // IconAttributeLink
             // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel2.Location = new System.Drawing.Point(272, 175);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(120, 18);
-            this.linkLabel2.TabIndex = 23;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Yusuke Kamiyamane.";
-            this.linkLabel2.VisitedLinkColor = System.Drawing.Color.Blue;
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.IconAttributeLink.AutoSize = true;
+            this.IconAttributeLink.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IconAttributeLink.Location = new System.Drawing.Point(272, 175);
+            this.IconAttributeLink.Name = "IconAttributeLink";
+            this.IconAttributeLink.Size = new System.Drawing.Size(120, 18);
+            this.IconAttributeLink.TabIndex = 23;
+            this.IconAttributeLink.TabStop = true;
+            this.IconAttributeLink.Text = "Yusuke Kamiyamane.";
+            this.IconAttributeLink.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.IconAttributeLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
-            // Form2
+            // AboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(443, 222);
-            this.Controls.Add(this.linkLabel2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.IconAttributeLink);
+            this.Controls.Add(this.IconAttributeLabel);
+            this.Controls.Add(this.EmailLink);
+            this.Controls.Add(this.EmailLabel);
+            this.Controls.Add(this.SpecialThanksLabel);
+            this.Controls.Add(this.DeveloperLabel);
+            this.Controls.Add(this.VersionLabel);
+            this.Controls.Add(this.AppNameLabel);
+            this.Controls.Add(this.MainImg);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form2";
+            this.Name = "AboutForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "About";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MainImg)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -166,14 +166,14 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.PictureBox MainImg;
+        private System.Windows.Forms.Label AppNameLabel;
+        private System.Windows.Forms.Label VersionLabel;
+        private System.Windows.Forms.Label DeveloperLabel;
+        private System.Windows.Forms.Label SpecialThanksLabel;
+        private System.Windows.Forms.Label EmailLabel;
+        private System.Windows.Forms.LinkLabel EmailLink;
+        private System.Windows.Forms.Label IconAttributeLabel;
+        private System.Windows.Forms.LinkLabel IconAttributeLink;
     }
 }

@@ -14,34 +14,26 @@ using System.Configuration;
 namespace Field_Obliteration_Clean_Automation
 {
     //RC 1.0.20170314
-    public partial class Form1 : Form
+    public partial class MainApp : Form
     {
-        public static int i = 0;
-        public class eachrow
-        {
-            public bool CheckB = false;
-            public string Name = null;
-            public string Dir = null;
-            public XmlDocument doc = null;
-        };
-        public Form1()
+        public MainApp()
         {
             InitializeComponent();
         }
         public static int j = 0;
         private void enableSeachButton(object sender, EventArgs e)
         {
-            if (textBox1.Text.Trim() != "" && textBox2.Text.Trim() != "" && textBox3.Text.Trim() != "")
-                button1.Enabled = true;
+            if (FieldTextBox.Text.Trim() != "" && ObjectTextBox.Text.Trim() != "" && PathTextBox.Text.Trim() != "")
+                SearchButton.Enabled = true;
             else
-                button1.Enabled = false;
+                SearchButton.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void searchButtonClick(object sender, EventArgs e)
         {
-            if (textBox1.Text.Trim().Length != 0 && textBox1.Text.Trim().Substring(textBox1.Text.Trim().Length - 3, 3) != "__c")
+            if (FieldTextBox.Text.Trim().Length != 0 && FieldTextBox.Text.Trim().Substring(FieldTextBox.Text.Trim().Length - 3, 3) != "__c")
             {
-                if (textBox2.Text.Trim().Length == 0)
+                if (ObjectTextBox.Text.Trim().Length == 0)
                 {
                     MessageBox.Show("The field to be deleted must be a Custom Field\r\nMust define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -50,9 +42,9 @@ namespace Field_Obliteration_Clean_Automation
                     MessageBox.Show("The field to be deleted must be a Custom Field", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else if (textBox1.Text.Trim().Length == 0)
+            else if (FieldTextBox.Text.Trim().Length == 0)
             {
-                if (textBox2.Text.Trim().Length == 0)
+                if (ObjectTextBox.Text.Trim().Length == 0)
                 {
                     MessageBox.Show("Must define field to be deleted\r\nMust define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -61,19 +53,18 @@ namespace Field_Obliteration_Clean_Automation
                     MessageBox.Show("Must define field to be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else if (textBox2.Text.Trim().Length == 0)
+            else if (ObjectTextBox.Text.Trim().Length == 0)
             {
                 MessageBox.Show("Must define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else {
-                i = 0;
-                dataGridView1.Rows.Clear();
+                MainDGV.Rows.Clear();
                 Cursor.Current = Cursors.WaitCursor;
                 Task.Delay(2000);
                 List<XmlDocument> docs = new List<XmlDocument>();
-                string field = textBox1.Text.Trim();
-                string component = textBox2.Text.Trim();
-                DirectoryInfo root = new DirectoryInfo(textBox3.Text);
+                string field = FieldTextBox.Text.Trim();
+                string component = ObjectTextBox.Text.Trim();
+                DirectoryInfo root = new DirectoryInfo(PathTextBox.Text);
                 DirectoryInfo[] dirs = root.GetDirectories();
                 foreach (DirectoryInfo dir in dirs)
                 {
@@ -98,7 +89,7 @@ namespace Field_Obliteration_Clean_Automation
                                                 match = "Full";
                                             }
                                             string fileName = file.Name.Replace(".reportType", "");
-                                            dataGridView1.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                                            MainDGV.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
                                             break;
                                         }
                                     }
@@ -113,7 +104,7 @@ namespace Field_Obliteration_Clean_Automation
                                             string match = "Full";
 
                                             string fileName = file.Name.Replace(".permissionset", "");
-                                            dataGridView1.Rows.Add(false, fileName, "permissionset", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                                            MainDGV.Rows.Add(false, fileName, "permissionset", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
                                             break;
                                         }
                                     }
@@ -128,7 +119,7 @@ namespace Field_Obliteration_Clean_Automation
                                             string match;
                                             match = "Full";
                                             string fileName = file.Name.Replace(".profile", "");
-                                            dataGridView1.Rows.Add(false, fileName, "profile", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                                            MainDGV.Rows.Add(false, fileName, "profile", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
                                             break;
 
 
@@ -146,7 +137,7 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 string match = "Full";
                                                 string fileName = file.Name.Replace(".objectTranslation", "");
-                                                dataGridView1.Rows.Add(false, fileName, "objectTranslation", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                                                MainDGV.Rows.Add(false, fileName, "objectTranslation", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
                                                 break;
                                             }
                                         }
@@ -182,7 +173,7 @@ namespace Field_Obliteration_Clean_Automation
                                                         match = "Full";
                                                     }
                                                     string reportfileName = reportfile.Name.Replace(".report", "");
-                                                    dataGridView1.Rows.Add(false, reportfileName, "report", match, reportfileline.TrimStart(' ').TrimEnd(' '), reportfile.FullName);
+                                                    MainDGV.Rows.Add(false, reportfileName, "report", match, reportfileline.TrimStart(' ').TrimEnd(' '), reportfile.FullName);
                                                     break;
                                                 }
                                             }
@@ -193,50 +184,50 @@ namespace Field_Obliteration_Clean_Automation
                         }
                     }
                 }
-                if (dataGridView1.RowCount != 0 && textBox1.TextLength != 0)
+                if (MainDGV.RowCount != 0 && FieldTextBox.TextLength != 0)
                 {
-                    toolStripStatusLabel1.Text = "Total files found: " + dataGridView1.RowCount;
-                    toolStripStatusLabel2.Text = "Selected files: 0";
-                    pictureBox1.Hide();
-                    pictureBox2.Hide();
-                    button2.Enabled = true;
-                    button3.Enabled = true;
-                    button4.Enabled = true;
-                    button6.Enabled = true;
+                    TotalFieldsStatusLabel.Text = "Total files found: " + MainDGV.RowCount;
+                    SelectedFieldsStatusLabel.Text = "Selected files: 0";
+                    DGVCover.Hide();
+                    DGVCoverImg.Hide();
+                    CleanButton.Enabled = true;
+                    SelectAllButton.Enabled = true;
+                    UnselectAllButton.Enabled = true;
+                    SelectMatchedButton.Enabled = true;
                     resizeColumns();
                 }
                 else
                 {
-                    toolStripStatusLabel1.Text = "Total files found: 0";
-                    pictureBox1.Show();
-                    pictureBox2.Show();
-                    button2.Enabled = false;
-                    button3.Enabled = false;
-                    button4.Enabled = false;
-                    button6.Enabled = false;
+                    TotalFieldsStatusLabel.Text = "Total files found: 0";
+                    DGVCover.Show();
+                    DGVCoverImg.Show();
+                    CleanButton.Enabled = false;
+                    SelectAllButton.Enabled = false;
+                    UnselectAllButton.Enabled = false;
+                    SelectMatchedButton.Enabled = false;
                     MessageBox.Show("No references were found from the desired field in the selected folder.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 Cursor.Current = Cursors.Default;
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void cleanButtonClick(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog2.ShowDialog();
+            DialogResult result = SaveFolderDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                if (Directory.Exists(folderBrowserDialog2.SelectedPath))
+                if (Directory.Exists(SaveFolderDialog.SelectedPath))
                 {
                     DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result2 == DialogResult.Yes)
                     {
                         Cursor.Current = Cursors.WaitCursor;
-                        if (dataGridView1.Rows.Count != 0)
+                        if (MainDGV.Rows.Count != 0)
                         {
                             bool chkboxtrue = false;
-                            string field = textBox1.Text.Trim();
-                            string component = textBox2.Text.Trim();
-                            foreach (DataGridViewRow row in dataGridView1.Rows)
+                            string field = FieldTextBox.Text.Trim();
+                            string component = ObjectTextBox.Text.Trim();
+                            foreach (DataGridViewRow row in MainDGV.Rows)
                             {
                                 DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
                                 if (Convert.ToBoolean(chkboxCell.Value))
@@ -263,8 +254,8 @@ namespace Field_Obliteration_Clean_Automation
                                                 {
                                                     nodo.ParentNode.RemoveChild(nodo);
                                                     int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                                    System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\reportTypes");
+                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\reportTypes");
                                                     XmlWriterSettings settings = new XmlWriterSettings
                                                     {
                                                         Encoding = Encoding.UTF8,
@@ -303,8 +294,8 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\permissionsets");
+                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\permissionsets");
                                                 XmlWriterSettings settings = new XmlWriterSettings
                                                 {
                                                     Encoding = Encoding.UTF8,
@@ -342,9 +333,9 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
+                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
                                                 String reportFolder = pathCell.Substring(pFrom).Replace(row.Cells[1].Value.ToString() + "." + row.Cells[2].Value.ToString(), "");
-                                                System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + reportFolder);
+                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
                                                 XmlWriterSettings settings = new XmlWriterSettings
                                                 {
                                                     Encoding = Encoding.UTF8,
@@ -382,8 +373,8 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\profiles");
+                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\profiles");
                                                 XmlWriterSettings settings = new XmlWriterSettings
                                                 {
                                                     Encoding = Encoding.UTF8,
@@ -421,8 +412,8 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\objectTranslations");
+                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\objectTranslations");
                                                 XmlWriterSettings settings = new XmlWriterSettings
                                                 {
                                                     Encoding = Encoding.UTF8,
@@ -491,12 +482,12 @@ namespace Field_Obliteration_Clean_Automation
                 else
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    if (dataGridView1.Rows.Count != 0)
+                    if (MainDGV.Rows.Count != 0)
                     {
                         bool chkboxtrue = false;
-                        string field = textBox1.Text.Trim();
-                        string component = textBox2.Text.Trim();
-                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        string field = FieldTextBox.Text.Trim();
+                        string component = ObjectTextBox.Text.Trim();
+                        foreach (DataGridViewRow row in MainDGV.Rows)
                         {
                             DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
                             if (Convert.ToBoolean(chkboxCell.Value))
@@ -523,8 +514,8 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\reportTypes");
+                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\reportTypes");
                                                 XmlWriterSettings settings = new XmlWriterSettings
                                                 {
                                                     Encoding = Encoding.UTF8,
@@ -563,8 +554,8 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                            System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\permissionsets");
+                                            String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                            System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\permissionsets");
                                             XmlWriterSettings settings = new XmlWriterSettings
                                             {
                                                 Encoding = Encoding.UTF8,
@@ -602,9 +593,9 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
+                                            String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
                                             String reportFolder = pathCell.Substring(pFrom).Replace(row.Cells[1].Value.ToString() + "." + row.Cells[2].Value.ToString(), "");
-                                            System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + reportFolder);
+                                            System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
                                             XmlWriterSettings settings = new XmlWriterSettings
                                             {
                                                 Encoding = Encoding.UTF8,
@@ -642,8 +633,8 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                            System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\profiles");
+                                            String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                            System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\profiles");
                                             XmlWriterSettings settings = new XmlWriterSettings
                                             {
                                                 Encoding = Encoding.UTF8,
@@ -681,8 +672,8 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = folderBrowserDialog2.SelectedPath + pathCell.Substring(pFrom);
-                                            System.IO.Directory.CreateDirectory(folderBrowserDialog2.SelectedPath + "\\src\\objectTranslations");
+                                            String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                                            System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\objectTranslations");
                                             XmlWriterSettings settings = new XmlWriterSettings
                                             {
                                                 Encoding = Encoding.UTF8,
@@ -750,55 +741,48 @@ namespace Field_Obliteration_Clean_Automation
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void selectAllButtonClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            foreach (DataGridViewRow dgv in dataGridView1.Rows)
+            foreach (DataGridViewRow dgv in MainDGV.Rows)
             {
                 dgv.Cells[0].Value = true;
             }
             Cursor.Current = Cursors.Default;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void unselectAllButtonClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            foreach (DataGridViewRow dgv in dataGridView1.Rows)
+            foreach (DataGridViewRow dgv in MainDGV.Rows)
             {
                 dgv.Cells[0].Value = false;
             }
             Cursor.Current = Cursors.Default;
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void loadPathButtonClick(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog(); // Show the dialog.
-            if (result == DialogResult.OK && folderBrowserDialog1.SelectedPath.Substring(folderBrowserDialog1.SelectedPath.Length - 3, 3) == "src") // Test result.
+            DialogResult result = LoadFolderDialog.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK && LoadFolderDialog.SelectedPath.Substring(LoadFolderDialog.SelectedPath.Length - 3, 3) == "src") // Test result.
             {
-                dataGridView1.Rows.Clear();
-                textBox3.Text = folderBrowserDialog1.SelectedPath;
-                button1.Enabled = true;
-                Properties.Settings.Default.PathReminder = textBox3.Text;
+                MainDGV.Rows.Clear();
+                PathTextBox.Text = LoadFolderDialog.SelectedPath;
+                SearchButton.Enabled = true;
+                Properties.Settings.Default.PathReminder = PathTextBox.Text;
                 Properties.Settings.Default.Save();
             }
-            else if (result == DialogResult.OK && folderBrowserDialog1.SelectedPath.Substring(folderBrowserDialog1.SelectedPath.Length - 3, 3) != "src")
+            else if (result == DialogResult.OK && LoadFolderDialog.SelectedPath.Substring(LoadFolderDialog.SelectedPath.Length - 3, 3) != "src")
             {
                 MessageBox.Show("An \"src\" folder must be selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                button5_Click(sender, e);
+                loadPathButtonClick(sender, e);
             }       
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form2 about = new Form2();
-            about.ShowDialog();
-            //MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
-        }
-
-        private void button6_Click(object sender, EventArgs e)
+        private void selectMatchedButtonClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            foreach (DataGridViewRow dgv in dataGridView1.Rows)
+            foreach (DataGridViewRow dgv in MainDGV.Rows)
             {
                 if (dgv.Cells[3].Value.ToString() == "Full")
                 {
@@ -808,9 +792,35 @@ namespace Field_Obliteration_Clean_Automation
             Cursor.Current = Cursors.Default;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBox3.Text = Properties.Settings.Default.PathReminder;
+            AboutForm about = new AboutForm();
+            about.ShowDialog();
+            //MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
+        }
+
+        private void previewDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewSelectedRowCollection rowPrev = MainDGV.SelectedRows;
+            if (rowPrev.Count != 1)
+            {
+                MessageBox.Show("Please select only one row", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                DataGridViewTextBoxCell matchline = rowPrev[0].Cells[4] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell path = rowPrev[0].Cells[5] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell component = rowPrev[0].Cells[1] as DataGridViewTextBoxCell;
+                PreviewForm preview = new PreviewForm();
+                string prev = rowPrev.ToString();
+                preview.previewTextBoxLoad(sender, e, matchline.Value.ToString(), component.Value.ToString(), path.Value.ToString());
+                preview.ShowDialog();
+            }
+        }
+
+        private void mainApp_Load(object sender, EventArgs e)
+        {
+            PathTextBox.Text = Properties.Settings.Default.PathReminder;
             timer1 = new Timer();
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 10; // in miliseconds
@@ -819,31 +829,32 @@ namespace Field_Obliteration_Clean_Automation
 
         private void dataGridView1_Click_1(object sender, EventArgs e)
         {
-            dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            MainDGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
         private Timer timer1;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            MainDGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridView1.RowCount != 0)
+            if (MainDGV.RowCount != 0)
             {
                 int alt = 0;
-                foreach (DataGridViewRow row in dataGridView1.Rows)
+                foreach (DataGridViewRow row in MainDGV.Rows)
                 {
                     if (Convert.ToBoolean(row.Cells[0].Value))
                     {
                         alt++;
                     }
                 }
-                toolStripStatusLabel2.Text = "Selected files: " + alt;
+                SelectedFieldsStatusLabel.Text = "Selected files: " + alt;
             }
         }
+
         private void resizeColumns()
         {
             Component.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;

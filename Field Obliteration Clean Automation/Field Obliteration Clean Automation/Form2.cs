@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace Field_Obliteration_Clean_Automation
 {
-    public partial class Form2 : Form
+    public partial class AboutForm : Form
     {
-        public Form2()
+        public AboutForm()
         {
             InitializeComponent();
         }

@@ -13,11 +13,12 @@ C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.exe
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.pdb
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.csprojResolveAssemblyReference.cache
-C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Form1.resources
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Properties.Resources.resources
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.csproj.GenerateResource.Cache
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.exe.manifest
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\bin\Debug\Field Obliteration Clean Automation.application
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.exe.manifest
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field Obliteration Clean Automation.application
-C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Form2.resources
+C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.MainApp.resources
+C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.AboutForm.resources
+C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.PreviewForm.resources
