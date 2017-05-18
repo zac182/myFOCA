@@ -122,16 +122,16 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     while ((fileline = filestr.ReadLine()) != null)
                                     {
-                                        if (fileline.Contains("." + field + "</field>") || fileline.Contains(">" + field + "</field>") || fileline.Contains("$" + field + "</field>"))
+
+                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
                                         {
-                                            string match = "Partial";
-                                            if (fileline.Contains("<field>" + component + "." + field + "</field>"))
-                                            {
-                                                match = "Full";
-                                            }
+                                            string match;
+                                            match = "Full";
                                             string fileName = file.Name.Replace(".profile", "");
                                             dataGridView1.Rows.Add(false, fileName, "profile", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
                                             break;
+
+
                                         }
                                     }
                                 }
