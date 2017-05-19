@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml;
 using System.Configuration;
+using System.Runtime.InteropServices;
 
 namespace Field_Obliteration_Clean_Automation
 {
@@ -20,19 +21,23 @@ namespace Field_Obliteration_Clean_Automation
             InitializeComponent();
         }
 
+        [DllImport("user32.dll", EntryPoint = "HideCaret")]
+        public static extern long HideCaret(IntPtr hwnd);
+
         public void previewTextBoxLoad(object sender, EventArgs e, string match, string component, string path)
-        {   
-            string[] previewBody = System.IO.File.ReadAllLines(path);
-            foreach(string line in previewBody)
-            {
-               PreviewTextBox.AppendText(line + "\n");
-            }
-            PreviewGroupBox.Text = component;
-            PreviewTextBox.Select(PreviewTextBox.Text.IndexOf(match), match.Length);
+        {
+            PreviewTextBox.Text = File.ReadAllText(path);
+            PreviewTextBox.Text = PreviewTextBox.Text.Replace("\r", "");
+            int matchIdx = PreviewTextBox.Text.IndexOf(match);
+            PreviewTextBox.Select(matchIdx, match.Length);
             PreviewTextBox.SelectionFont = new Font(PreviewTextBox.Font, FontStyle.Bold);
             PreviewTextBox.SelectionColor = Color.Red;
             PreviewTextBox.ScrollToCaret();
-            PreviewTextBox.Select(PreviewTextBox.Text.IndexOf(match) - 300, 0);
+            if (matchIdx >= 300)
+            {
+                PreviewTextBox.Select(matchIdx - 300, 0);
+            }
+            HideCaret(PreviewTextBox.Handle);
         }
     }
 }

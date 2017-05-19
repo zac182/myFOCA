@@ -82,11 +82,12 @@
             // 
             // FieldTextBox
             // 
-            this.FieldTextBox.Location = new System.Drawing.Point(105, 37);
+            this.FieldTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FieldTextBox.Location = new System.Drawing.Point(728, 34);
             this.FieldTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FieldTextBox.Name = "FieldTextBox";
             this.FieldTextBox.Size = new System.Drawing.Size(356, 21);
-            this.FieldTextBox.TabIndex = 1;
+            this.FieldTextBox.TabIndex = 2;
             this.FieldTextBox.TextChanged += new System.EventHandler(this.enableSeachButton);
             // 
             // MainDGV
@@ -187,28 +188,27 @@
             // 
             // ObjectTextBox
             // 
-            this.ObjectTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ObjectTextBox.Location = new System.Drawing.Point(728, 37);
+            this.ObjectTextBox.Location = new System.Drawing.Point(78, 34);
             this.ObjectTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ObjectTextBox.Name = "ObjectTextBox";
             this.ObjectTextBox.Size = new System.Drawing.Size(357, 21);
-            this.ObjectTextBox.TabIndex = 2;
+            this.ObjectTextBox.TabIndex = 1;
             this.ObjectTextBox.TextChanged += new System.EventHandler(this.enableSeachButton);
             // 
             // FieldLabel
             // 
+            this.FieldLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.FieldLabel.AutoSize = true;
-            this.FieldLabel.Location = new System.Drawing.Point(14, 37);
+            this.FieldLabel.Location = new System.Drawing.Point(684, 37);
             this.FieldLabel.Name = "FieldLabel";
-            this.FieldLabel.Size = new System.Drawing.Size(85, 18);
+            this.FieldLabel.Size = new System.Drawing.Size(38, 18);
             this.FieldLabel.TabIndex = 5;
-            this.FieldLabel.Text = "Field Deleted:";
+            this.FieldLabel.Text = "Field:";
             // 
             // ObjectLabel
             // 
-            this.ObjectLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ObjectLabel.AutoSize = true;
-            this.ObjectLabel.Location = new System.Drawing.Point(671, 37);
+            this.ObjectLabel.Location = new System.Drawing.Point(21, 37);
             this.ObjectLabel.Name = "ObjectLabel";
             this.ObjectLabel.Size = new System.Drawing.Size(51, 18);
             this.ObjectLabel.TabIndex = 6;

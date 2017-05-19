@@ -21,6 +21,7 @@ namespace Field_Obliteration_Clean_Automation
             InitializeComponent();
         }
         public static int j = 0;
+
         private void enableSeachButton(object sender, EventArgs e)
         {
             if (FieldTextBox.Text.Trim() != "" && ObjectTextBox.Text.Trim() != "" && PathTextBox.Text.Trim() != "")
@@ -63,7 +64,9 @@ namespace Field_Obliteration_Clean_Automation
                 Task.Delay(2000);
                 List<XmlDocument> docs = new List<XmlDocument>();
                 string field = FieldTextBox.Text.Trim();
+                string fieldLower = field.ToLower();
                 string component = ObjectTextBox.Text.Trim();
+                string componentLower = component.ToLower();
                 DirectoryInfo root = new DirectoryInfo(PathTextBox.Text);
                 DirectoryInfo[] dirs = root.GetDirectories();
                 foreach (DirectoryInfo dir in dirs)
@@ -81,10 +84,10 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     while ((fileline = filestr.ReadLine()) != null)
                                     {
-                                        if (fileline.Contains("." + field + "</field>") || fileline.Contains(">" + field + "</field>") || fileline.Contains("$" + field + "</field>"))
+                                        if (fileline.ToLower().Contains("." + fieldLower + "</field>") || fileline.ToLower().Contains(">" + fieldLower + "</field>") || fileline.ToLower().Contains("$" + fieldLower + "</field>"))
                                         {
                                             string match = "Partial";
-                                            if (fileline.Contains("<field>" + component + "." + field + "</field>"))
+                                            if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
                                             {
                                                 match = "Full";
                                             }
@@ -99,7 +102,7 @@ namespace Field_Obliteration_Clean_Automation
                                     while ((fileline = filestr.ReadLine()) != null)
                                     {
 
-                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
+                                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
                                         {
                                             string match = "Full";
 
@@ -114,7 +117,7 @@ namespace Field_Obliteration_Clean_Automation
                                     while ((fileline = filestr.ReadLine()) != null)
                                     {
 
-                                        if (fileline.Contains("<field>" + component + "." + field + "</field>"))
+                                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
                                         {
                                             string match;
                                             match = "Full";
@@ -129,11 +132,11 @@ namespace Field_Obliteration_Clean_Automation
                                 else if (fileline.Contains("<CustomObjectTranslation"))
                                 {
                                     int pathint = file.FullName.IndexOf("\\objectTranslations\\") + 20;
-                                    if (file.FullName.Substring(pathint) == component + "-en_US.objectTranslation")
+                                    if (file.FullName.Substring(pathint).ToLower() == (component + "-en_US.objectTranslation").ToLower())
                                         {
                                         while ((fileline = filestr.ReadLine()) != null)
                                         {
-                                            if (fileline.Contains("<name>" + field + "</name>"))
+                                            if (fileline.ToLower().Contains("<name>" + fieldLower + "</name>"))
                                             {
                                                 string match = "Full";
                                                 string fileName = file.Name.Replace(".objectTranslation", "");
@@ -165,10 +168,10 @@ namespace Field_Obliteration_Clean_Automation
                                         {
                                             while ((reportfileline = reportfilestr.ReadLine()) != null)
                                             {
-                                                if (reportfileline.Contains("." + field + "</field>") || reportfileline.Contains(">" + field + "</field>") || reportfileline.Contains("$" + field + "</field>"))
+                                                if (reportfileline.ToLower().Contains("." + fieldLower + "</field>") || reportfileline.ToLower().Contains(">" + fieldLower + "</field>") || reportfileline.ToLower().Contains("$" + fieldLower + "</field>"))
                                                     {
                                                     string match = "Partial";
-                                                    if (reportfileline.Contains("<field>" + component + "." + field + "</field>"))
+                                                    if (reportfileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
                                                     {
                                                         match = "Full";
                                                     }
@@ -216,7 +219,7 @@ namespace Field_Obliteration_Clean_Automation
             DialogResult result = SaveFolderDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                if (Directory.Exists(SaveFolderDialog.SelectedPath))
+                if (Directory.Exists(SaveFolderDialog.SelectedPath + "\\src"))
                 {
                     DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result2 == DialogResult.Yes)
@@ -238,9 +241,12 @@ namespace Field_Obliteration_Clean_Automation
                                     XmlDocument doc = new XmlDocument();
                                     XmlWriter writer = null;
                                     string pathCell = row.Cells[5].Value.ToString();
+                                    string matchLine = row.Cells[4].Value.ToString();
                                     doc.Load(pathCell);
                                     if (pathCell.Contains("\\reportTypes\\"))
                                     {
+                                        string fieldMatched = matchLine.Replace("<field>", "");
+                                        fieldMatched = fieldMatched.Replace("</field>", "");
                                         XmlNodeList NodeLista = doc.GetElementsByTagName("ReportType");
                                         XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
                                         for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
@@ -250,7 +256,7 @@ namespace Field_Obliteration_Clean_Automation
                                             foreach (XmlElement nodo in NodeLista3)
                                             {
                                                 XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.Contains(field))
+                                                if (nField[0].InnerText.ToLower().Contains(fieldMatched))
                                                 {
                                                     nodo.ParentNode.RemoveChild(nodo);
                                                     int pFrom = pathCell.IndexOf("\\src\\");
@@ -285,12 +291,14 @@ namespace Field_Obliteration_Clean_Automation
                                     }
                                     else if (pathCell.Contains("\\permissionsets\\"))
                                     {
+                                        string fieldMatched = matchLine.Replace("<field>", "");
+                                        fieldMatched = fieldMatched.Replace("</field>", "");
                                         XmlNodeList NodeLista = doc.GetElementsByTagName("PermissionSet");
                                         XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
                                         foreach (XmlElement nodo in NodeLista2)
                                         {
                                             XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(field))
+                                            if (nField[0].InnerText.Contains(fieldMatched))
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
@@ -324,12 +332,14 @@ namespace Field_Obliteration_Clean_Automation
                                     }
                                     else if (pathCell.Contains("\\reports\\"))
                                     {
+                                        string fieldMatched = matchLine.Replace("<field>", "");
+                                        fieldMatched = fieldMatched.Replace("</field>", "");
                                         XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
                                         XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
                                         foreach (XmlElement nodo in NodeLista2)
                                         {
                                             XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(field))
+                                            if (nField[0].InnerText.Contains(fieldMatched))
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
@@ -364,12 +374,14 @@ namespace Field_Obliteration_Clean_Automation
                                     }
                                     else if (pathCell.Contains("\\profiles\\"))
                                     {
+                                        string fieldMatched = matchLine.Replace("<field>", "");
+                                        fieldMatched = fieldMatched.Replace("</field>", "");
                                         XmlNodeList NodeLista = doc.GetElementsByTagName("Profile");
                                         XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
                                         foreach (XmlElement nodo in NodeLista2)
                                         {
                                             XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(field))
+                                            if (nField[0].InnerText.Contains(fieldMatched))
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
@@ -403,12 +415,14 @@ namespace Field_Obliteration_Clean_Automation
                                     }
                                     else if (pathCell.Contains("\\objectTranslations\\"))
                                     {
+                                        string fieldMatched = matchLine.Replace("<name>", "");
+                                        fieldMatched = fieldMatched.Replace("</name>", "");
                                         XmlNodeList NodeLista = doc.GetElementsByTagName("CustomObjectTranslation");
                                         XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
                                         foreach (XmlElement nodo in NodeLista2)
                                         {
                                             XmlNodeList nField = nodo.GetElementsByTagName("name");
-                                            if (nField[0].InnerText.Contains(field))
+                                            if (nField[0].InnerText.Contains(fieldMatched))
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
@@ -498,9 +512,12 @@ namespace Field_Obliteration_Clean_Automation
                                 XmlDocument doc = new XmlDocument();
                                 XmlWriter writer = null;
                                 string pathCell = row.Cells[5].Value.ToString();
+                                string matchLine = row.Cells[4].Value.ToString();
                                 doc.Load(pathCell);
                                 if (pathCell.Contains("\\reportTypes\\"))
                                 {
+                                    string fieldMatched = matchLine.Replace("<field>", "");
+                                    fieldMatched = fieldMatched.Replace("</field>", "");
                                     XmlNodeList NodeLista = doc.GetElementsByTagName("ReportType");
                                     XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
                                     for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
@@ -510,7 +527,7 @@ namespace Field_Obliteration_Clean_Automation
                                         foreach (XmlElement nodo in NodeLista3)
                                         {
                                             XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(field))
+                                            if (nField[0].InnerText.Contains(fieldMatched))
                                             {
                                                 nodo.ParentNode.RemoveChild(nodo);
                                                 int pFrom = pathCell.IndexOf("\\src\\");
@@ -545,12 +562,14 @@ namespace Field_Obliteration_Clean_Automation
                                 }
                                 else if (pathCell.Contains("\\permissionsets\\"))
                                 {
+                                    string fieldMatched = matchLine.Replace("<field>", "");
+                                    fieldMatched = fieldMatched.Replace("</field>", "");
                                     XmlNodeList NodeLista = doc.GetElementsByTagName("PermissionSet");
                                     XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
                                     foreach (XmlElement nodo in NodeLista2)
                                     {
                                         XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(field))
+                                        if (nField[0].InnerText.Contains(fieldMatched))
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
@@ -584,12 +603,14 @@ namespace Field_Obliteration_Clean_Automation
                                 }
                                 else if (pathCell.Contains("\\reports\\"))
                                 {
+                                    string fieldMatched = matchLine.Replace("<field>", "");
+                                    fieldMatched = fieldMatched.Replace("</field>", "");
                                     XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
                                     XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
                                     foreach (XmlElement nodo in NodeLista2)
                                     {
                                         XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(field))
+                                        if (nField[0].InnerText.Contains(fieldMatched))
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
@@ -624,12 +645,14 @@ namespace Field_Obliteration_Clean_Automation
                                 }
                                 else if (pathCell.Contains("\\profiles\\"))
                                 {
+                                    string fieldMatched = matchLine.Replace("<field>", "");
+                                    fieldMatched = fieldMatched.Replace("</field>", "");
                                     XmlNodeList NodeLista = doc.GetElementsByTagName("Profile");
                                     XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
                                     foreach (XmlElement nodo in NodeLista2)
                                     {
                                         XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(field))
+                                        if (nField[0].InnerText.Contains(fieldMatched))
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
@@ -663,12 +686,14 @@ namespace Field_Obliteration_Clean_Automation
                                 }
                                 else if (pathCell.Contains("\\objectTranslations\\"))
                                 {
+                                    string fieldMatched = matchLine.Replace("<name>", "");
+                                    fieldMatched = fieldMatched.Replace("</name>", "");
                                     XmlNodeList NodeLista = doc.GetElementsByTagName("CustomObjectTranslation");
                                     XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
                                     foreach (XmlElement nodo in NodeLista2)
                                     {
                                         XmlNodeList nField = nodo.GetElementsByTagName("name");
-                                        if (nField[0].InnerText.Contains(field))
+                                        if (nField[0].InnerText.Contains(fieldMatched))
                                         {
                                             nodo.ParentNode.RemoveChild(nodo);
                                             int pFrom = pathCell.IndexOf("\\src\\");
@@ -810,12 +835,14 @@ namespace Field_Obliteration_Clean_Automation
                 }
                 else
                 {
-                    DataGridViewTextBoxCell matchline = rowPrev[0].Cells[4] as DataGridViewTextBoxCell;
-                    DataGridViewTextBoxCell path = rowPrev[0].Cells[5] as DataGridViewTextBoxCell;
-                    DataGridViewTextBoxCell component = rowPrev[0].Cells[1] as DataGridViewTextBoxCell;
+                    string matchline = rowPrev[0].Cells[4].Value.ToString();
+                    string path = rowPrev[0].Cells[5].Value.ToString();
+                    string component = rowPrev[0].Cells[1].Value.ToString();
+                    string type = rowPrev[0].Cells[2].Value.ToString();
                     PreviewForm preview = new PreviewForm();
+                    preview.Text = component + "." + type;
                     string prev = rowPrev.ToString();
-                    preview.previewTextBoxLoad(sender, e, matchline.Value.ToString(), component.Value.ToString(), path.Value.ToString());
+                    preview.previewTextBoxLoad(sender, e, matchline, component, path);
                     preview.ShowDialog();
                 }
             }
@@ -823,6 +850,7 @@ namespace Field_Obliteration_Clean_Automation
 
         private void mainApp_Load(object sender, EventArgs e)
         {
+            Text = "F.O.C.A. v1.0";
             PathTextBox.Text = Properties.Settings.Default.PathReminder;
             timer1 = new Timer();
             timer1.Tick += new EventHandler(timer1_Tick);
