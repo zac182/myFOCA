@@ -57,6 +57,7 @@
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectMatchedButton = new System.Windows.Forms.Button();
+            this.srcAsDestCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.MainDGV)).BeginInit();
             this.PathGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVCover)).BeginInit();
@@ -248,6 +249,7 @@
             // 
             this.PathGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.PathGroupBox.Controls.Add(this.srcAsDestCheckBox);
             this.PathGroupBox.Controls.Add(this.LoadPathButton);
             this.PathGroupBox.Controls.Add(this.PathTextBox);
             this.PathGroupBox.Location = new System.Drawing.Point(17, 73);
@@ -263,7 +265,7 @@
             // 
             this.LoadPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadPathButton.Image = ((System.Drawing.Image)(resources.GetObject("LoadPathButton.Image")));
-            this.LoadPathButton.Location = new System.Drawing.Point(1093, 22);
+            this.LoadPathButton.Location = new System.Drawing.Point(894, 22);
             this.LoadPathButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadPathButton.Name = "LoadPathButton";
             this.LoadPathButton.Size = new System.Drawing.Size(29, 35);
@@ -279,7 +281,7 @@
             this.PathTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PathTextBox.Name = "PathTextBox";
             this.PathTextBox.ReadOnly = true;
-            this.PathTextBox.Size = new System.Drawing.Size(1080, 21);
+            this.PathTextBox.Size = new System.Drawing.Size(881, 21);
             this.PathTextBox.TabIndex = 3;
             this.PathTextBox.TextChanged += new System.EventHandler(this.enableSeachButton);
             // 
@@ -370,6 +372,26 @@
             this.SelectMatchedButton.UseVisualStyleBackColor = true;
             this.SelectMatchedButton.Click += new System.EventHandler(this.selectMatchedButtonClick);
             // 
+            // srcAsDestCheckBox
+            // 
+            this.srcAsDestCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.srcAsDestCheckBox.AutoSize = true;
+            this.srcAsDestCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.srcAsDestCheckBox.Location = new System.Drawing.Point(929, 30);
+            this.srcAsDestCheckBox.Name = "srcAsDestCheckBox";
+            this.srcAsDestCheckBox.Size = new System.Drawing.Size(195, 22);
+            this.srcAsDestCheckBox.TabIndex = 6;
+            this.srcAsDestCheckBox.Text = "Use this as Destination Folder?";
+            this.srcAsDestCheckBox.UseVisualStyleBackColor = true;
+            //
+            // SaveFolderDialog
+            //
+            this.SaveFolderDialog.Description = "Select the root folder in which \n the src folder will be created or modified.";
+            //
+            // LoadFolderDialog
+            //
+            this.LoadFolderDialog.Description = "Select the src folder to be used as source.";
+            // 
             // MainApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
@@ -443,6 +465,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Button SelectMatchedButton;
         private System.Windows.Forms.ToolStripStatusLabel SelectedFieldsStatusLabel;
+        private System.Windows.Forms.CheckBox srcAsDestCheckBox;
     }
 }
 
