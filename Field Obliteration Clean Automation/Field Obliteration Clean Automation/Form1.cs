@@ -20,7 +20,8 @@ namespace Field_Obliteration_Clean_Automation
         {
             InitializeComponent();
         }
-        public static int j = 0;
+        
+        public bool previewOn = false;
 
         private void enableSeachButton(object sender, EventArgs e)
         {
@@ -69,62 +70,96 @@ namespace Field_Obliteration_Clean_Automation
             }
         }
 
-        private void searchButtonProcess(object sender, EventArgs e, string fileline, string fieldLower, string componentLower, FileInfo file, StreamReader filestr, string type)
+        private void searchButtonProcess(object sender, EventArgs e, string fieldLower, string componentLower, FileInfo file, StreamReader filestr, string typeFile, string type, XmlDocument doc)
         {
-            if (type == "reportType" || type == "report")
+            int i = 0;
+            bool bkr = false;
+            if (type == "ReportType")
             {
-                while ((fileline = filestr.ReadLine()) != null)
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
+                for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
                 {
-                    if (fileline.ToLower().Contains("." + fieldLower + "</field>") || fileline.ToLower().Contains(">" + fieldLower + "</field>") || fileline.ToLower().Contains("$" + fieldLower + "</field>"))
+                    XmlNodeList NodeLista3 = null;
+                    NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
+                    foreach (XmlElement nodo in NodeLista3)
                     {
-                        string match = "Partial";
-                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
+                        XmlNodeList nField = nodo.GetElementsByTagName("field");
+                        if (nField[0].InnerText.ToLower().EndsWith(fieldLower))
                         {
-                            match = "Full";
-                        }
-                        string fileName = file.Name.Replace("." + type, "");
-                        MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                        break;
-                    }
-                }
-            }
-            else if (type == "permissionset" || type == "profile")
-            {
-                while ((fileline = filestr.ReadLine()) != null)
-                {
-
-                    if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
-                    {
-                        string match = "Full";
-
-                        string fileName = file.Name.Replace("." + type, "");
-                        MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                        break;
-                    }
-                }
-            }
-            else if (type == "objectTranslation")
-            {
-                int pathint = file.FullName.IndexOf("\\objectTranslations\\") + 20;
-                if (file.FullName.Substring(pathint).ToLower() == (componentLower + "-en_US.objectTranslation").ToLower())
-                {
-                    while ((fileline = filestr.ReadLine()) != null)
-                    {
-                        if (fileline.ToLower().Contains("<name>" + fieldLower + "</name>"))
-                        {
-                            string match = "Full";
+                            string match = "Partial";
+                            if (nField[0].InnerText.ToLower().Equals(componentLower + "." + fieldLower))
+                            {
+                                match = "Full";
+                            }
                             string fileName = file.Name.Replace("." + type, "");
-                            MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                            MainDGV.Rows.Add(false, fileName, typeFile, match, nField[0].InnerText, file.FullName);
+                            bkr = true;
                             break;
                         }
                     }
+                    i++;
+                }
+            }
+            else if (type == "PermissionSet" || type == "Profile")
+            {
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("field");
+                    if (nField[0].InnerText.ToLower().Equals(componentLower + "." + fieldLower))
+                    {
+                        string match = "Full";
+                        string fileName = file.Name.Replace("." + type, "");
+                        MainDGV.Rows.Add(false, fileName, typeFile, match, nField[0].InnerText, file.FullName);
+                        break;
+                    }
+                }
+            }
+            else if (type == "CustomObjectTranslation")
+            {
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("name");
+                    if (nField[0].InnerText.ToLower().Equals(fieldLower))
+                    {
+                        string match = "Full";
+                        string fileName = file.Name.Replace("." + type, "");
+                        MainDGV.Rows.Add(false, fileName, typeFile, match, nField[0].InnerText, file.FullName);
+                        break;
+                    }
+                }
+            }
+            else if (type == "Report")
+            {
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("field");
+                    if (nField[0].InnerText.ToLower().EndsWith(fieldLower))
+                    {
+                        string match = "Partial";
+                            if (nField[0].InnerText.ToLower().Equals(componentLower + "." + fieldLower))
+                            {
+                                match = "Full";
+                            }
+                            string fileName = file.Name.Replace("." + type, "");
+                            MainDGV.Rows.Add(false, fileName, typeFile, match, nField[0].InnerText, file.FullName);
+                            bkr = true;
+                            break;
+                    }
+
                 }
             }
         }
 
         private void searchButtonClick(object sender, EventArgs e)
         {
-             if (searchButtonValidation(sender,e))
+            if (searchButtonValidation(sender, e))
             {
                 MainDGV.Rows.Clear();
                 Cursor.Current = Cursors.WaitCursor;
@@ -134,1323 +169,376 @@ namespace Field_Obliteration_Clean_Automation
                 string fieldLower = field.ToLower();
                 string component = ObjectTextBox.Text.Trim();
                 string componentLower = component.ToLower();
-                DirectoryInfo root = new DirectoryInfo(PathTextBox.Text);
-                DirectoryInfo[] dirs = root.GetDirectories();
-                foreach (DirectoryInfo dir in dirs)
+                if (Directory.Exists(PathTextBox.Text))
                 {
-                    if (dir.Name != "reports")
+                    DirectoryInfo root = new DirectoryInfo(PathTextBox.Text);
+                    DirectoryInfo[] dirs = root.GetDirectories();
+                    foreach (DirectoryInfo dir in dirs)
                     {
-                        FileInfo[] files = dir.GetFiles();
-                        foreach (FileInfo file in files)
+                        if (dir.Name == "reportTypes" || dir.Name == "permissionsets" || dir.Name == "profiles" || dir.Name == "objectTranslations")
                         {
-                            StreamReader filestr = file.OpenText();
-                            string fileline;
-                            while ((fileline = filestr.ReadLine()) != null)
+                            FileInfo[] files = dir.GetFiles();
+                            foreach (FileInfo file in files)
                             {
-                                if (fileline.Contains("<ReportType"))
+                                XmlDocument doc = new XmlDocument();
+                                string filepath = file.FullName.ToString();
+                                doc.Load(filepath);
+                                StreamReader filestr = file.OpenText();
+                                if (file.FullName.Contains("reportType"))
                                 {
-                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "reportType");
+                                    searchButtonProcess(sender, e, fieldLower, componentLower, file, filestr, "reportType", "ReportType", doc);
                                 }
-                                else if (fileline.Contains("<PermissionSet"))
+                                else if (file.FullName.Contains("permissionset"))
                                 {
-                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "permissionset");
+                                    searchButtonProcess(sender, e, fieldLower, componentLower, file, filestr, "permissionset", "PermissionSet", doc);
                                 }
-                                else if (fileline.Contains("<Profile"))
+                                else if (file.FullName.Contains("profile"))
                                 {
-                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "profile");
+                                    searchButtonProcess(sender, e, fieldLower, componentLower, file, filestr, "profile", "Profile", doc);
                                 }
-                                else if (fileline.Contains("<CustomObjectTranslation"))
+                                else if (file.FullName.Contains("objectTranslation"))
                                 {
-                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "objectTranslation");
+                                    searchButtonProcess(sender, e, fieldLower, componentLower, file, filestr, "objectTranslation", "CustomObjectTranslation", doc);
                                 }
+
                             }
                         }
-                    }
-                    else
-                    {
-                        DirectoryInfo reportroot = new DirectoryInfo(dir.FullName);
-                        DirectoryInfo[] reportdirs = reportroot.GetDirectories();
-                        foreach (DirectoryInfo reportdir in reportdirs)
+                        else if (dir.Name == "reports")
                         {
-                            if (reportdir.Name != "unfiled$public")
+                            DirectoryInfo reportroot = new DirectoryInfo(dir.FullName);
+                            DirectoryInfo[] reportdirs = reportroot.GetDirectories();
+                            foreach (DirectoryInfo reportdir in reportdirs)
                             {
-                                FileInfo[] reportfiles = reportdir.GetFiles();
-                                foreach (FileInfo reportfile in reportfiles)
+                                if (reportdir.Name != "unfiled$public")
                                 {
-                                    StreamReader reportfilestr = reportfile.OpenText();
-                                    string reportfileline;
-                                    while ((reportfileline = reportfilestr.ReadLine()) != null)
+                                    FileInfo[] reportfiles = reportdir.GetFiles();
+                                    foreach (FileInfo reportfile in reportfiles)
                                     {
-                                        if (reportfileline.Contains("<Report"))
-                                        {
-                                            searchButtonProcess(sender, e, reportfileline, fieldLower, componentLower, reportfile, reportfilestr, "report");
-                                        }
+                                        XmlDocument doc = new XmlDocument();
+                                        string filepath = reportfile.FullName.ToString();
+                                        doc.Load(filepath);
+                                        StreamReader reportfilestr = reportfile.OpenText();
+                                            if (reportfile.FullName.Contains("report"))
+                                            {
+                                                searchButtonProcess(sender, e, fieldLower, componentLower, reportfile, reportfilestr, "report", "Report", doc);
+                                            }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                if (MainDGV.RowCount != 0 && FieldTextBox.TextLength != 0)
-                {
-                    TotalFieldsStatusLabel.Text = "Total files found: " + MainDGV.RowCount;
-                    SelectedFieldsStatusLabel.Text = "Selected files: 0";
-                    DGVCover.Hide();
-                    DGVCoverImg.Hide();
-                    CleanButton.Enabled = true;
-                    SelectAllButton.Enabled = true;
-                    UnselectAllButton.Enabled = true;
-                    SelectMatchedButton.Enabled = true;
-                    resizeColumns();
+                    if (MainDGV.RowCount != 0 && FieldTextBox.TextLength != 0)
+                    {
+                        TotalFieldsStatusLabel.Text = "Total files found: " + MainDGV.RowCount;
+                        SelectedFieldsStatusLabel.Text = "Selected files: 0";
+                        DGVCover.Hide();
+                        DGVCoverImg.Hide();
+                        CleanButton.Enabled = true;
+                        SelectAllButton.Enabled = true;
+                        UnselectAllButton.Enabled = true;
+                        SelectMatchedButton.Enabled = true;
+                        resizeColumns();
+                        previewOn = true;
+                    }
+                    else
+                    {
+                        TotalFieldsStatusLabel.Text = "Total files found: 0";
+                        DGVCover.Show();
+                        DGVCoverImg.Show();
+                        CleanButton.Enabled = false;
+                        SelectAllButton.Enabled = false;
+                        UnselectAllButton.Enabled = false;
+                        SelectMatchedButton.Enabled = false;
+                        MessageBox.Show("No references were found from the desired field in the selected folder.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    Cursor.Current = Cursors.Default;
                 }
                 else
                 {
-                    TotalFieldsStatusLabel.Text = "Total files found: 0";
-                    DGVCover.Show();
-                    DGVCoverImg.Show();
-                    CleanButton.Enabled = false;
-                    SelectAllButton.Enabled = false;
-                    UnselectAllButton.Enabled = false;
-                    SelectMatchedButton.Enabled = false;
-                    MessageBox.Show("No references were found from the desired field in the selected folder.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Please validate that the folder exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                Cursor.Current = Cursors.Default;
+
+            }
+        }
+        
+        private void fileRenew(object sender, EventArgs e, string pathCell, XmlDocument doc, XmlWriter writer, string typeFile, DataGridViewRow row, bool srcAsDest, bool existDir)
+        {
+            string pathCellfinal;
+            int pFrom = pathCell.IndexOf("\\src\\");
+            if (typeFile == "report")
+            {
+                if (srcAsDest)
+                {
+                    pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
+                    String reportFolder = pathCell.Substring(pFrom + 4);
+                    reportFolder = reportFolder.Replace(row.Cells[1].Value.ToString(), "");
+                    System.IO.Directory.CreateDirectory(PathTextBox.Text + reportFolder);
+                }
+                else
+                {
+                    pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                    String reportFolder = pathCell.Substring(pFrom);
+                    reportFolder = reportFolder.Replace(row.Cells[1].Value.ToString(), "");
+                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
+                }
+            }
+            else
+            {
+                if (srcAsDest)
+                {
+                    pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
+                    System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\" + typeFile);
+                }
+                else
+                {
+                    pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
+                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\" + typeFile);
+                }
+            }
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                IndentChars = "    ",
+                NewLineChars = "\r\n",
+                NewLineHandling = NewLineHandling.Replace,
+                CloseOutput = true
+            };
+            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
+            doc.Save(writer);
+            writer.Close();
+            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
+            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            string xmlpart2 = xmlString.Substring(38);
+            if (typeFile == "objectTranslations")
+            {
+                string removable1 = ">\r\n            <!--";
+                string removable2 = "-->\r\n        </";
+                string removable3 = ">\r\n                <!--";
+                string removable4 = "-->\r\n            </";
+                string removable5 = "\'";
+                while (xmlpart2.Contains(removable1))
+                {
+                    xmlpart2 = xmlpart2.Replace(removable1, "><!--");
+                }
+                while (xmlpart2.Contains(removable2))
+                {
+                    xmlpart2 = xmlpart2.Replace(removable2, "--></");
+                }
+                while (xmlpart2.Contains(removable3))
+                {
+                    xmlpart2 = xmlpart2.Replace(removable3, "><!--");
+                }
+                while (xmlpart2.Contains(removable4))
+                {
+                    xmlpart2 = xmlpart2.Replace(removable4, "--></");
+                }
+                while (xmlpart2.Contains(removable5))
+                {
+                    xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
+                }
+            }
+            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
+            {
+                sw.Write(xmlpart1 + xmlpart2);
+                sw.WriteLine("");
+            }
+
+            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+            StreamReader sr2;
+            if (srcAsDest)
+            {
+                sr2 = File.OpenText(pathCellfinal);
+            }
+            else
+            {
+                sr2 = File.OpenText(pathCell);
+            }
+            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+            {
+                string fileline1;
+                string fileline2;
+                while ((fileline1 = sr1.ReadLine()) != null)
+                {
+                    while ((fileline2 = sr2.ReadLine()) != null)
+                    {
+                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                        {
+                            sw.WriteLine(fileline2);
+                            break;
+                        }
+                    }
+                }
+            }
+            sr1.Close();
+            sr2.Close();
+            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+            using (StreamWriter sw = File.CreateText(pathCellfinal))
+            {
+                sw.Write(replacementXML);
+            }
+            File.Delete(pathCellfinal + ".tmp");
+            File.Delete(pathCellfinal + ".tmp2");
+        }
+
+        private void cleanButtonProcess(object sender, EventArgs e, int i, string matchLine, bool bkr, XmlDocument doc, XmlWriter writer, DataGridViewRow row, string pathCell, string type, string typeFile, bool srcAsDest, bool existDir)
+        {
+            if (type == "ReportType")
+            {
+                string fieldMatched = matchLine.Replace("<field>", "");
+                fieldMatched = fieldMatched.Replace("</field>", "");
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
+                for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
+                {
+                    XmlNodeList NodeLista3 = null;
+                    NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
+                    foreach (XmlElement nodo in NodeLista3)
+                    {
+                        XmlNodeList nField = nodo.GetElementsByTagName("field");
+                        if (nField[0].InnerText.Contains(fieldMatched))
+                        {
+                            nodo.ParentNode.RemoveChild(nodo);
+                            fileRenew(sender, e, pathCell,doc, writer,typeFile, row, srcAsDest, existDir);
+                            bkr = true;
+                            break;
+                        }
+                    }
+                    i++;
+                }
+            }
+            else if(type == "PermissionSet" || type == "Profile")
+            {
+                string fieldMatched = matchLine.Replace("<field>", "");
+                fieldMatched = fieldMatched.Replace("</field>", "");
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("field");
+                    if (nField[0].InnerText.Contains(fieldMatched))
+                    {
+                        nodo.ParentNode.RemoveChild(nodo);
+                        fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
+                        bkr = true;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else if (type == "Report")
+            {
+                string fieldMatched = matchLine.Replace("<field>", "");
+                fieldMatched = fieldMatched.Replace("</field>", "");
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("field");
+                    if (nField[0].InnerText.Contains(fieldMatched))
+                    {
+                        nodo.ParentNode.RemoveChild(nodo);
+                        fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
+                        bkr = true;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else if (type == "CustomObjectTranslation")
+            {
+                string fieldMatched = matchLine.Replace("<name>", "");
+                fieldMatched = fieldMatched.Replace("</name>", "");
+                XmlNodeList NodeLista = doc.GetElementsByTagName(type);
+                XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
+                foreach (XmlElement nodo in NodeLista2)
+                {
+                    XmlNodeList nField = nodo.GetElementsByTagName("name");
+                    if (nField[0].InnerText.Contains(fieldMatched))
+                    {
+                        nodo.ParentNode.RemoveChild(nodo);
+                        fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
+                        bkr = true;
+                        break;
+                    }
+                    i++;
+                }
             }
         }
 
         private void cleanButtonClick(object sender, EventArgs e)
         {
-            if (srcAsDestCheckBox.Checked)
-            {
-                DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result2 == DialogResult.Yes)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    if (MainDGV.Rows.Count != 0)
-                    {
-                        bool chkboxtrue = false;
-                        string field = FieldTextBox.Text.Trim();
-                        string component = ObjectTextBox.Text.Trim();
-                        foreach (DataGridViewRow row in MainDGV.Rows)
-                        {
-                            DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
-                            if (Convert.ToBoolean(chkboxCell.Value))
-                            {
-                                chkboxtrue = true;
-                                int i = 0;
-                                bool bkr = false;
-                                XmlDocument doc = new XmlDocument();
-                                XmlWriter writer = null;
-                                string pathCell = row.Cells[5].Value.ToString();
-                                string matchLine = row.Cells[4].Value.ToString();
-                                doc.Load(pathCell);
-                                if (pathCell.Contains("\\reportTypes\\"))
-                                {
-                                    string fieldMatched = matchLine.Replace("<field>", "");
-                                    fieldMatched = fieldMatched.Replace("</field>", "");
-                                    XmlNodeList NodeLista = doc.GetElementsByTagName("ReportType");
-                                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
-                                    for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
-                                    {
-                                        XmlNodeList NodeLista3 = null;
-                                        NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
-                                        foreach (XmlElement nodo in NodeLista3)
-                                        {
-                                            XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(fieldMatched))
-                                            {
-                                                nodo.ParentNode.RemoveChild(nodo);
-                                                int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                                                System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\reportTypes");
-                                                XmlWriterSettings settings = new XmlWriterSettings
-                                                {
-                                                    Encoding = Encoding.UTF8,
-                                                    Indent = true,
-                                                    IndentChars = "    ",
-                                                    NewLineChars = "\r\n",
-                                                    NewLineHandling = NewLineHandling.Replace,
-                                                    CloseOutput = true
-                                                };
-                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                doc.Save(writer);
-                                                writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                {
-                                                    sw.Write(xmlpart1 + xmlpart2);
-                                                    sw.WriteLine("");
-                                                }
-
-                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                StreamReader sr2 = File.OpenText(pathCellfinal);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                {
-                                                    string fileline1;
-                                                    string fileline2;
-                                                    while ((fileline1 = sr1.ReadLine()) != null)
-                                                    {
-                                                        while ((fileline2 = sr2.ReadLine()) != null)
-                                                        {
-                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                            {
-                                                                sw.WriteLine(fileline2);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                sr1.Close();
-                                                sr2.Close();
-                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                {
-                                                    sw.Write(replacementXML);
-                                                }
-                                                File.Delete(pathCellfinal + ".tmp");
-                                                File.Delete(pathCellfinal + ".tmp2");
-                                                bkr = true;
-                                                break;
-                                            }
-                                        }
-                                        i++;
-                                    }
-                                }
-                                else if (pathCell.Contains("\\permissionsets\\"))
-                                {
-                                    string fieldMatched = matchLine.Replace("<field>", "");
-                                    fieldMatched = fieldMatched.Replace("</field>", "");
-                                    XmlNodeList NodeLista = doc.GetElementsByTagName("PermissionSet");
-                                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                    foreach (XmlElement nodo in NodeLista2)
-                                    {
-                                        XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(fieldMatched))
-                                        {
-                                            nodo.ParentNode.RemoveChild(nodo);
-                                            int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                                            System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\permissionsets");
-                                            XmlWriterSettings settings = new XmlWriterSettings
-                                            {
-                                                Encoding = Encoding.UTF8,
-                                                Indent = true,
-                                                IndentChars = "    ",
-                                                NewLineChars = "\r\n",
-                                                NewLineHandling = NewLineHandling.Replace,
-                                                CloseOutput = true
-                                            };
-                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                            doc.Save(writer);
-                                            writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                            string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                            {
-                                                sw.Write(xmlpart1 + xmlpart2);
-                                                sw.WriteLine("");
-                                            }
-
-                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                            StreamReader sr2 = File.OpenText(pathCellfinal);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                            {
-                                                string fileline1;
-                                                string fileline2;
-                                                while ((fileline1 = sr1.ReadLine()) != null)
-                                                {
-                                                    while ((fileline2 = sr2.ReadLine()) != null)
-                                                    {
-                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                        {
-                                                            sw.WriteLine(fileline2);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            sr1.Close();
-                                            sr2.Close();
-                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                            {
-                                                sw.Write(replacementXML);
-                                            }
-                                            File.Delete(pathCellfinal + ".tmp");
-                                            File.Delete(pathCellfinal + ".tmp2");
-                                            bkr = true;
-                                            break;
-                                        }
-                                        i++;
-                                    }
-                                }
-                                else if (pathCell.Contains("\\reports\\"))
-                                {
-                                    string fieldMatched = matchLine.Replace("<field>", "");
-                                    fieldMatched = fieldMatched.Replace("</field>", "");
-                                    XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
-                                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
-                                    foreach (XmlElement nodo in NodeLista2)
-                                    {
-                                        XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(fieldMatched))
-                                        {
-                                            nodo.ParentNode.RemoveChild(nodo);
-                                            int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                                            String reportFolder = pathCell.Substring(pFrom+4).Replace(row.Cells[1].Value.ToString() + "." + row.Cells[2].Value.ToString(), "");
-                                            System.IO.Directory.CreateDirectory(PathTextBox.Text + reportFolder);
-                                            XmlWriterSettings settings = new XmlWriterSettings
-                                            {
-                                                Encoding = Encoding.UTF8,
-                                                Indent = true,
-                                                IndentChars = "    ",
-                                                NewLineChars = "\r\n",
-                                                NewLineHandling = NewLineHandling.Replace,
-                                                CloseOutput = true
-                                            };
-                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                            doc.Save(writer);
-                                            writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                            string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                            {
-                                                sw.Write(xmlpart1 + xmlpart2);
-                                                sw.WriteLine("");
-                                            }
-
-                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                            StreamReader sr2 = File.OpenText(pathCellfinal);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                            {
-                                                string fileline1;
-                                                string fileline2;
-                                                while ((fileline1 = sr1.ReadLine()) != null)
-                                                {
-                                                    while ((fileline2 = sr2.ReadLine()) != null)
-                                                    {
-                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                        {
-                                                            sw.WriteLine(fileline2);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            sr1.Close();
-                                            sr2.Close();
-                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                            {
-                                                sw.Write(replacementXML);
-                                            }
-                                            File.Delete(pathCellfinal + ".tmp");
-                                            File.Delete(pathCellfinal + ".tmp2");
-                                            bkr = true;
-                                            break;
-                                        }
-                                        i++;
-                                    }
-                                }
-                                else if (pathCell.Contains("\\profiles\\"))
-                                {
-                                    string fieldMatched = matchLine.Replace("<field>", "");
-                                    fieldMatched = fieldMatched.Replace("</field>", "");
-                                    XmlNodeList NodeLista = doc.GetElementsByTagName("Profile");
-                                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                    foreach (XmlElement nodo in NodeLista2)
-                                    {
-                                        XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                        if (nField[0].InnerText.Contains(fieldMatched))
-                                        {
-                                            nodo.ParentNode.RemoveChild(nodo);
-                                            int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                                            System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\profiles");
-                                            XmlWriterSettings settings = new XmlWriterSettings
-                                            {
-                                                Encoding = Encoding.UTF8,
-                                                Indent = true,
-                                                IndentChars = "    ",
-                                                NewLineChars = "\r\n",
-                                                NewLineHandling = NewLineHandling.Replace,
-                                                CloseOutput = true
-                                            };
-                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                            doc.Save(writer);
-                                            writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                            string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                            {
-                                                sw.Write(xmlpart1 + xmlpart2);
-                                                sw.WriteLine("");
-                                            }
-
-                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                            StreamReader sr2 = File.OpenText(pathCellfinal);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                            {
-                                                string fileline1;
-                                                string fileline2;
-                                                while ((fileline1 = sr1.ReadLine()) != null)
-                                                {
-                                                    while ((fileline2 = sr2.ReadLine()) != null)
-                                                    {
-                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                        {
-                                                            sw.WriteLine(fileline2);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            sr1.Close();
-                                            sr2.Close();
-                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                            {
-                                                sw.Write(replacementXML);
-                                            }
-                                            File.Delete(pathCellfinal + ".tmp");
-                                            File.Delete(pathCellfinal + ".tmp2");
-                                            bkr = true;
-                                            break;
-                                        }
-                                        i++;
-                                    }
-                                }
-                                else if (pathCell.Contains("\\objectTranslations\\"))
-                                {
-                                    string fieldMatched = matchLine.Replace("<name>", "");
-                                    fieldMatched = fieldMatched.Replace("</name>", "");
-                                    XmlNodeList NodeLista = doc.GetElementsByTagName("CustomObjectTranslation");
-                                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
-                                    foreach (XmlElement nodo in NodeLista2)
-                                    {
-                                        XmlNodeList nField = nodo.GetElementsByTagName("name");
-                                        if (nField[0].InnerText.Contains(fieldMatched))
-                                        {
-                                            nodo.ParentNode.RemoveChild(nodo);
-                                            int pFrom = pathCell.IndexOf("\\src\\");
-                                            String pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                                            System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\objectTranslations");
-                                            XmlWriterSettings settings = new XmlWriterSettings
-                                            {
-                                                Encoding = Encoding.UTF8,
-                                                Indent = true,
-                                                IndentChars = "    ",
-                                                NewLineChars = "\r\n",
-                                                NewLineHandling = NewLineHandling.Replace,
-                                                CloseOutput = true
-                                            };
-                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                            doc.Save(writer);
-                                            writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                            string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                            string xmlpart2 = xmlString.Substring(38);
-                                            string removable1 = ">\r\n            <!--";
-                                            string removable2 = "-->\r\n        </";
-                                            string removable3 = ">\r\n                <!--";
-                                            string removable4 = "-->\r\n            </";
-                                            string removable5 = "\'";
-                                            while (xmlpart2.Contains(removable1))
-                                            {
-                                                xmlpart2 = xmlpart2.Replace(removable1, "><!--");
-                                            }
-                                            while (xmlpart2.Contains(removable2))
-                                            {
-                                                xmlpart2 = xmlpart2.Replace(removable2, "--></");
-                                            }
-                                            while (xmlpart2.Contains(removable3))
-                                            {
-                                                xmlpart2 = xmlpart2.Replace(removable3, "><!--");
-                                            }
-                                            while (xmlpart2.Contains(removable4))
-                                            {
-                                                xmlpart2 = xmlpart2.Replace(removable4, "--></");
-                                            }
-                                            while (xmlpart2.Contains(removable5))
-                                            {
-                                                xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
-                                            }
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                            {
-                                                sw.Write(xmlpart1 + xmlpart2);
-                                                sw.WriteLine("");
-                                            }
-                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                            StreamReader sr2 = File.OpenText(pathCellfinal);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                            {
-                                                string fileline1;
-                                                string fileline2;
-                                                while ((fileline1 = sr1.ReadLine()) != null)
-                                                {
-                                                    while ((fileline2 = sr2.ReadLine()) != null)
-                                                    {
-                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                        {
-                                                            sw.WriteLine(fileline2);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            sr1.Close();
-                                            sr2.Close();
-                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                            {
-                                                sw.Write(replacementXML);
-                                            }
-                                            File.Delete(pathCellfinal + ".tmp");
-                                            File.Delete(pathCellfinal + ".tmp2");
-                                            bkr = true;
-                                            break;
-                                        }
-                                        i++;
-                                    }
-                                }
-                            }
-                        }
-                        Cursor.Current = Cursors.Default;
-                        if (chkboxtrue)
-                        {
-                            MessageBox.Show("Task Completed!");
-                        }
-                        else
-                        {
-                            MessageBox.Show("There was no row checked", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                }
-            }
-            else
+            bool srcAsDest = srcAsDestCheckBox.Checked;
+            bool existDir = false;
+            bool executeClean = false;
+            if (!srcAsDest)
             {
                 DialogResult result = SaveFolderDialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    if (Directory.Exists(SaveFolderDialog.SelectedPath + "\\src"))
+                    existDir = Directory.Exists(SaveFolderDialog.SelectedPath + "\\src");
+                }
+            }
+            if (srcAsDest || existDir)
+            {
+                DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result2 == DialogResult.Yes)
+                {
+                    executeClean = true;
+                }
+            }
+            if (executeClean || !(srcAsDest||existDir||executeClean))
+            { 
+                Cursor.Current = Cursors.WaitCursor;
+                if (MainDGV.Rows.Count != 0)
+                {
+                    bool chkboxtrue = false;
+                    string field = FieldTextBox.Text.Trim();
+                    string component = ObjectTextBox.Text.Trim();
+                    foreach (DataGridViewRow row in MainDGV.Rows)
                     {
-                        DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result2 == DialogResult.Yes)
+                        DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
+                        if (Convert.ToBoolean(chkboxCell.Value))
                         {
-                            Cursor.Current = Cursors.WaitCursor;
-                            if (MainDGV.Rows.Count != 0)
+                            chkboxtrue = true;
+                            int i = 0;
+                            bool bkr = false;
+                            XmlDocument doc = new XmlDocument();
+                            XmlWriter writer = null;
+                            string pathCell = row.Cells[5].Value.ToString();
+                            string matchLine = row.Cells[4].Value.ToString();
+                            doc.Load(pathCell);
+                            if (pathCell.Contains("\\reportTypes\\"))
                             {
-                                bool chkboxtrue = false;
-                                string field = FieldTextBox.Text.Trim();
-                                string component = ObjectTextBox.Text.Trim();
-                                foreach (DataGridViewRow row in MainDGV.Rows)
-                                {
-                                    DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
-                                    if (Convert.ToBoolean(chkboxCell.Value))
-                                    {
-                                        chkboxtrue = true;
-                                        int i = 0;
-                                        bool bkr = false;
-                                        XmlDocument doc = new XmlDocument();
-                                        XmlWriter writer = null;
-                                        string pathCell = row.Cells[5].Value.ToString();
-                                        string matchLine = row.Cells[4].Value.ToString();
-                                        doc.Load(pathCell);
-                                        if (pathCell.Contains("\\reportTypes\\"))
-                                        {
-                                            string fieldMatched = matchLine.Replace("<field>", "");
-                                            fieldMatched = fieldMatched.Replace("</field>", "");
-                                            XmlNodeList NodeLista = doc.GetElementsByTagName("ReportType");
-                                            XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
-                                            for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
-                                            {
-                                                XmlNodeList NodeLista3 = null;
-                                                NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
-                                                foreach (XmlElement nodo in NodeLista3)
-                                                {
-                                                    XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                    if (nField[0].InnerText.ToLower().Contains(fieldMatched))
-                                                    {
-                                                        nodo.ParentNode.RemoveChild(nodo);
-                                                        int pFrom = pathCell.IndexOf("\\src\\");
-                                                        String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                        System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\reportTypes");
-                                                        XmlWriterSettings settings = new XmlWriterSettings
-                                                        {
-                                                            Encoding = Encoding.UTF8,
-                                                            Indent = true,
-                                                            IndentChars = "    ",
-                                                            NewLineChars = "\r\n",
-                                                            NewLineHandling = NewLineHandling.Replace,
-                                                            CloseOutput = true
-                                                        };
-                                                        writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                        doc.Save(writer);
-                                                        writer.Close();
-                                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                        string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                        string xmlpart2 = xmlString.Substring(38);
-                                                        using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                        {
-                                                            sw.Write(xmlpart1 + xmlpart2);
-                                                            sw.WriteLine("");
-                                                        }
-                                                        StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                        StreamReader sr2 = File.OpenText(pathCell);
-                                                        using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                        {
-                                                            string fileline1;
-                                                            string fileline2;
-                                                            while ((fileline1 = sr1.ReadLine()) != null)
-                                                            {
-                                                                while ((fileline2 = sr2.ReadLine()) != null)
-                                                                {
-                                                                    if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                                    {
-                                                                        sw.WriteLine(fileline2);
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        sr1.Close();
-                                                        sr2.Close();
-                                                        string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                        {
-                                                            sw.Write(replacementXML);
-                                                        }
-                                                        File.Delete(pathCellfinal + ".tmp");
-                                                        File.Delete(pathCellfinal + ".tmp2");
-                                                        bkr = true;
-                                                        break;
-                                                    }
-                                                }
-                                                i++;
-                                            }
-                                        }
-                                        else if (pathCell.Contains("\\permissionsets\\"))
-                                        {
-                                            string fieldMatched = matchLine.Replace("<field>", "");
-                                            fieldMatched = fieldMatched.Replace("</field>", "");
-                                            XmlNodeList NodeLista = doc.GetElementsByTagName("PermissionSet");
-                                            XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                            foreach (XmlElement nodo in NodeLista2)
-                                            {
-                                                XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.Contains(fieldMatched))
-                                                {
-                                                    nodo.ParentNode.RemoveChild(nodo);
-                                                    int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\permissionsets");
-                                                    XmlWriterSettings settings = new XmlWriterSettings
-                                                    {
-                                                        Encoding = Encoding.UTF8,
-                                                        Indent = true,
-                                                        IndentChars = "    ",
-                                                        NewLineChars = "\r\n",
-                                                        NewLineHandling = NewLineHandling.Replace,
-                                                        CloseOutput = true
-                                                    };
-                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                    doc.Save(writer);
-                                                    writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                    string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                    string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                    {
-                                                        sw.Write(xmlpart1 + xmlpart2);
-                                                        sw.WriteLine("");
-                                                    }
-                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                    StreamReader sr2 = File.OpenText(pathCell);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                    {
-                                                        string fileline1;
-                                                        string fileline2;
-                                                        while ((fileline1 = sr1.ReadLine()) != null)
-                                                        {
-                                                            while ((fileline2 = sr2.ReadLine()) != null)
-                                                            {
-                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                                {
-                                                                    sw.WriteLine(fileline2);
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    sr1.Close();
-                                                    sr2.Close();
-                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                    {
-                                                        sw.Write(replacementXML);
-                                                    }
-                                                    File.Delete(pathCellfinal + ".tmp");
-                                                    File.Delete(pathCellfinal + ".tmp2");
-                                                    bkr = true;
-                                                    break;
-                                                }
-                                                i++;
-                                            }
-                                        }
-                                        else if (pathCell.Contains("\\reports\\"))
-                                        {
-                                            string fieldMatched = matchLine.Replace("<field>", "");
-                                            fieldMatched = fieldMatched.Replace("</field>", "");
-                                            XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
-                                            XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
-                                            foreach (XmlElement nodo in NodeLista2)
-                                            {
-                                                XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.Contains(fieldMatched))
-                                                {
-                                                    nodo.ParentNode.RemoveChild(nodo);
-                                                    int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                    String reportFolder = pathCell.Substring(pFrom).Replace(row.Cells[1].Value.ToString() + "." + row.Cells[2].Value.ToString(), "");
-                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
-                                                    XmlWriterSettings settings = new XmlWriterSettings
-                                                    {
-                                                        Encoding = Encoding.UTF8,
-                                                        Indent = true,
-                                                        IndentChars = "    ",
-                                                        NewLineChars = "\r\n",
-                                                        NewLineHandling = NewLineHandling.Replace,
-                                                        CloseOutput = true
-                                                    };
-                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                    doc.Save(writer);
-                                                    writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                    string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                    string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                    {
-                                                        sw.Write(xmlpart1 + xmlpart2);
-                                                        sw.WriteLine("");
-                                                    }
-                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                    StreamReader sr2 = File.OpenText(pathCell);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                    {
-                                                        string fileline1;
-                                                        string fileline2;
-                                                        while ((fileline1 = sr1.ReadLine()) != null)
-                                                        {
-                                                            while ((fileline2 = sr2.ReadLine()) != null)
-                                                            {
-                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                                {
-                                                                    sw.WriteLine(fileline2);
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    sr1.Close();
-                                                    sr2.Close();
-                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                    {
-                                                        sw.Write(replacementXML);
-                                                    }
-                                                    File.Delete(pathCellfinal + ".tmp");
-                                                    File.Delete(pathCellfinal + ".tmp2");
-                                                    bkr = true;
-                                                    break;
-                                                }
-                                                i++;
-                                            }
-                                        }
-                                        else if (pathCell.Contains("\\profiles\\"))
-                                        {
-                                            string fieldMatched = matchLine.Replace("<field>", "");
-                                            fieldMatched = fieldMatched.Replace("</field>", "");
-                                            XmlNodeList NodeLista = doc.GetElementsByTagName("Profile");
-                                            XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                            foreach (XmlElement nodo in NodeLista2)
-                                            {
-                                                XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.Contains(fieldMatched))
-                                                {
-                                                    nodo.ParentNode.RemoveChild(nodo);
-                                                    int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\profiles");
-                                                    XmlWriterSettings settings = new XmlWriterSettings
-                                                    {
-                                                        Encoding = Encoding.UTF8,
-                                                        Indent = true,
-                                                        IndentChars = "    ",
-                                                        NewLineChars = "\r\n",
-                                                        NewLineHandling = NewLineHandling.Replace,
-                                                        CloseOutput = true
-                                                    };
-                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                    doc.Save(writer);
-                                                    writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                    string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                    string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                    {
-                                                        sw.Write(xmlpart1 + xmlpart2);
-                                                        sw.WriteLine("");
-                                                    }
-                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                    StreamReader sr2 = File.OpenText(pathCell);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                    {
-                                                        string fileline1;
-                                                        string fileline2;
-                                                        while ((fileline1 = sr1.ReadLine()) != null)
-                                                        {
-                                                            while ((fileline2 = sr2.ReadLine()) != null)
-                                                            {
-                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                                {
-                                                                    sw.WriteLine(fileline2);
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    sr1.Close();
-                                                    sr2.Close();
-                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                    {
-                                                        sw.Write(replacementXML);
-                                                    }
-                                                    File.Delete(pathCellfinal + ".tmp");
-                                                    File.Delete(pathCellfinal + ".tmp2");
-                                                    bkr = true;
-                                                    break;
-                                                }
-                                                i++;
-                                            }
-                                        }
-                                        else if (pathCell.Contains("\\objectTranslations\\"))
-                                        {
-                                            string fieldMatched = matchLine.Replace("<name>", "");
-                                            fieldMatched = fieldMatched.Replace("</name>", "");
-                                            XmlNodeList NodeLista = doc.GetElementsByTagName("CustomObjectTranslation");
-                                            XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
-                                            foreach (XmlElement nodo in NodeLista2)
-                                            {
-                                                XmlNodeList nField = nodo.GetElementsByTagName("name");
-                                                if (nField[0].InnerText.Contains(fieldMatched))
-                                                {
-                                                    nodo.ParentNode.RemoveChild(nodo);
-                                                    int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\objectTranslations");
-                                                    XmlWriterSettings settings = new XmlWriterSettings
-                                                    {
-                                                        Encoding = Encoding.UTF8,
-                                                        Indent = true,
-                                                        IndentChars = "    ",
-                                                        NewLineChars = "\r\n",
-                                                        NewLineHandling = NewLineHandling.Replace,
-                                                        CloseOutput = true
-                                                    };
-                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                    doc.Save(writer);
-                                                    writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                    string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                    string xmlpart2 = xmlString.Substring(38);
-                                                    string removable1 = ">\r\n            <!--";
-                                                    string removable2 = "-->\r\n        </";
-                                                    string removable3 = ">\r\n                <!--";
-                                                    string removable4 = "-->\r\n            </";
-                                                    string removable5 = "\'";
-                                                    while (xmlpart2.Contains(removable1))
-                                                    {
-                                                        xmlpart2 = xmlpart2.Replace(removable1, "><!--");
-                                                    }
-                                                    while (xmlpart2.Contains(removable2))
-                                                    {
-                                                        xmlpart2 = xmlpart2.Replace(removable2, "--></");
-                                                    }
-                                                    while (xmlpart2.Contains(removable3))
-                                                    {
-                                                        xmlpart2 = xmlpart2.Replace(removable3, "><!--");
-                                                    }
-                                                    while (xmlpart2.Contains(removable4))
-                                                    {
-                                                        xmlpart2 = xmlpart2.Replace(removable4, "--></");
-                                                    }
-                                                    while (xmlpart2.Contains(removable5))
-                                                    {
-                                                        xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
-                                                    }
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                    {
-                                                        sw.Write(xmlpart1 + xmlpart2);
-                                                        sw.WriteLine("");
-                                                    }
-                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                    StreamReader sr2 = File.OpenText(pathCell);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                    {
-                                                        string fileline1;
-                                                        string fileline2;
-                                                        while ((fileline1 = sr1.ReadLine()) != null)
-                                                        {
-                                                            while ((fileline2 = sr2.ReadLine()) != null)
-                                                            {
-                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                                                                {
-                                                                    sw.WriteLine(fileline2);
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    sr1.Close();
-                                                    sr2.Close();
-                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                    {
-                                                        sw.Write(replacementXML);
-                                                    }
-                                                    File.Delete(pathCellfinal + ".tmp");
-                                                    File.Delete(pathCellfinal + ".tmp2");
-                                                    bkr = true;
-                                                    break;
-                                                }
-                                                i++;
-                                            }
-                                        }
-                                    }
-                                }
-                                Cursor.Current = Cursors.Default;
-                                if (chkboxtrue)
-                                {
-                                    MessageBox.Show("Task Completed!");
-                                }
-                                else
-                                {
-                                    MessageBox.Show("There was no row checked", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                }
+                                cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "ReportType", "reportTypes", srcAsDest, existDir);
+                            }
+                            else if (pathCell.Contains("\\permissionsets\\"))
+                            {
+                                cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "PermissionSet", "permissionsets", srcAsDest, existDir);
+                            }
+                            else if (pathCell.Contains("\\reports\\"))
+                            {
+                                cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "Report", "report", srcAsDest, existDir);
+                            }
+                            else if (pathCell.Contains("\\profiles\\"))
+                            {
+                                cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "Profile", "profiles", srcAsDest, existDir);
+                            }
+                            else if (pathCell.Contains("\\objectTranslations\\"))
+                            {
+                                cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "CustomObjectTranslation", "objectTranslations", srcAsDest, existDir);
                             }
                         }
                     }
+                    Cursor.Current = Cursors.Default;
+                    if (chkboxtrue)
+                    {
+                        MessageBox.Show("Task Completed!", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        previewOn = false;
+                    }
                     else
                     {
-                        Cursor.Current = Cursors.WaitCursor;
-                        if (MainDGV.Rows.Count != 0)
-                        {
-                            bool chkboxtrue = false;
-                            string field = FieldTextBox.Text.Trim();
-                            string component = ObjectTextBox.Text.Trim();
-                            foreach (DataGridViewRow row in MainDGV.Rows)
-                            {
-                                DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
-                                if (Convert.ToBoolean(chkboxCell.Value))
-                                {
-                                    chkboxtrue = true;
-                                    int i = 0;
-                                    bool bkr = false;
-                                    XmlDocument doc = new XmlDocument();
-                                    XmlWriter writer = null;
-                                    string pathCell = row.Cells[5].Value.ToString();
-                                    string matchLine = row.Cells[4].Value.ToString();
-                                    doc.Load(pathCell);
-                                    if (pathCell.Contains("\\reportTypes\\"))
-                                    {
-                                        string fieldMatched = matchLine.Replace("<field>", "");
-                                        fieldMatched = fieldMatched.Replace("</field>", "");
-                                        XmlNodeList NodeLista = doc.GetElementsByTagName("ReportType");
-                                        XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
-                                        for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
-                                        {
-                                            XmlNodeList NodeLista3 = null;
-                                            NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
-                                            foreach (XmlElement nodo in NodeLista3)
-                                            {
-                                                XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.ToLower().Contains(fieldMatched))
-                                                {
-                                                    nodo.ParentNode.RemoveChild(nodo);
-                                                    int pFrom = pathCell.IndexOf("\\src\\");
-                                                    String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                    System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\reportTypes");
-                                                    XmlWriterSettings settings = new XmlWriterSettings
-                                                    {
-                                                        Encoding = Encoding.UTF8,
-                                                        Indent = true,
-                                                        IndentChars = "    ",
-                                                        NewLineChars = "\r\n",
-                                                        NewLineHandling = NewLineHandling.Replace,
-                                                        CloseOutput = true
-                                                    };
-                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                    doc.Save(writer);
-                                                    writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                    string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                    string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                    {
-                                                        sw.Write(xmlpart1 + xmlpart2);
-                                                        sw.WriteLine("");
-                                                    }
-                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                    StreamReader sr2 = File.OpenText(pathCell);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                    {
-                                                        string fileline1;
-                                                        string fileline2;
-                                                        while ((fileline1 = sr1.ReadLine()) != null)
-                                                        {
-                                                            while ((fileline2 = sr2.ReadLine()) != null)
-                                                            {
-                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
-                                                                {
-                                                                    sw.WriteLine(fileline2);
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    sr1.Close();
-                                                    sr2.Close();
-                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                    {
-                                                        sw.Write(replacementXML);
-                                                    }
-                                                    File.Delete(pathCellfinal + ".tmp");
-                                                    File.Delete(pathCellfinal + ".tmp2");
-                                                    bkr = true;
-                                                    break;
-                                                }
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                    else if (pathCell.Contains("\\permissionsets\\"))
-                                    {
-                                        string fieldMatched = matchLine.Replace("<field>", "");
-                                        fieldMatched = fieldMatched.Replace("</field>", "");
-                                        XmlNodeList NodeLista = doc.GetElementsByTagName("PermissionSet");
-                                        XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                        foreach (XmlElement nodo in NodeLista2)
-                                        {
-                                            XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(fieldMatched))
-                                            {
-                                                nodo.ParentNode.RemoveChild(nodo);
-                                                int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\permissionsets");
-                                                XmlWriterSettings settings = new XmlWriterSettings
-                                                {
-                                                    Encoding = Encoding.UTF8,
-                                                    Indent = true,
-                                                    IndentChars = "    ",
-                                                    NewLineChars = "\r\n",
-                                                    NewLineHandling = NewLineHandling.Replace,
-                                                    CloseOutput = true
-                                                };
-                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                doc.Save(writer);
-                                                writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                {
-                                                    sw.Write(xmlpart1 + xmlpart2);
-                                                    sw.WriteLine("");
-                                                }
-                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                StreamReader sr2 = File.OpenText(pathCell);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                {
-                                                    string fileline1;
-                                                    string fileline2;
-                                                    while ((fileline1 = sr1.ReadLine()) != null)
-                                                    {
-                                                        while ((fileline2 = sr2.ReadLine()) != null)
-                                                        {
-                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
-                                                            {
-                                                                sw.WriteLine(fileline2);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                sr1.Close();
-                                                sr2.Close();
-                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                {
-                                                    sw.Write(replacementXML);
-                                                }
-                                                File.Delete(pathCellfinal + ".tmp");
-                                                File.Delete(pathCellfinal + ".tmp2");
-                                                bkr = true;
-                                                break;
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                    else if (pathCell.Contains("\\reports\\"))
-                                    {
-                                        string fieldMatched = matchLine.Replace("<field>", "");
-                                        fieldMatched = fieldMatched.Replace("</field>", "");
-                                        XmlNodeList NodeLista = doc.GetElementsByTagName("Report");
-                                        XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
-                                        foreach (XmlElement nodo in NodeLista2)
-                                        {
-                                            XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(fieldMatched))
-                                            {
-                                                nodo.ParentNode.RemoveChild(nodo);
-                                                int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                String reportFolder = pathCell.Substring(pFrom).Replace(row.Cells[1].Value.ToString() + "." + row.Cells[2].Value.ToString(), "");
-                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
-                                                XmlWriterSettings settings = new XmlWriterSettings
-                                                {
-                                                    Encoding = Encoding.UTF8,
-                                                    Indent = true,
-                                                    IndentChars = "    ",
-                                                    NewLineChars = "\r\n",
-                                                    NewLineHandling = NewLineHandling.Replace,
-                                                    CloseOutput = true
-                                                };
-                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                doc.Save(writer);
-                                                writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                {
-                                                    sw.Write(xmlpart1 + xmlpart2);
-                                                    sw.WriteLine("");
-                                                }
-                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                StreamReader sr2 = File.OpenText(pathCell);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                {
-                                                    string fileline1;
-                                                    string fileline2;
-                                                    while ((fileline1 = sr1.ReadLine()) != null)
-                                                    {
-                                                        while ((fileline2 = sr2.ReadLine()) != null)
-                                                        {
-                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
-                                                            {
-                                                                sw.WriteLine(fileline2);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                sr1.Close();
-                                                sr2.Close();
-                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                {
-                                                    sw.Write(replacementXML);
-                                                }
-                                                File.Delete(pathCellfinal + ".tmp");
-                                                File.Delete(pathCellfinal + ".tmp2");
-                                                bkr = true;
-                                                break;
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                    else if (pathCell.Contains("\\profiles\\"))
-                                    {
-                                        string fieldMatched = matchLine.Replace("<field>", "");
-                                        fieldMatched = fieldMatched.Replace("</field>", "");
-                                        XmlNodeList NodeLista = doc.GetElementsByTagName("Profile");
-                                        XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                                        foreach (XmlElement nodo in NodeLista2)
-                                        {
-                                            XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                            if (nField[0].InnerText.Contains(fieldMatched))
-                                            {
-                                                nodo.ParentNode.RemoveChild(nodo);
-                                                int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\profiles");
-                                                XmlWriterSettings settings = new XmlWriterSettings
-                                                {
-                                                    Encoding = Encoding.UTF8,
-                                                    Indent = true,
-                                                    IndentChars = "    ",
-                                                    NewLineChars = "\r\n",
-                                                    NewLineHandling = NewLineHandling.Replace,
-                                                    CloseOutput = true
-                                                };
-                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                doc.Save(writer);
-                                                writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                {
-                                                    sw.Write(xmlpart1 + xmlpart2);
-                                                    sw.WriteLine("");
-                                                }
-                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                StreamReader sr2 = File.OpenText(pathCell);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                {
-                                                    string fileline1;
-                                                    string fileline2;
-                                                    while ((fileline1 = sr1.ReadLine()) != null)
-                                                    {
-                                                        while ((fileline2 = sr2.ReadLine()) != null)
-                                                        {
-                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
-                                                            {
-                                                                sw.WriteLine(fileline2);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                sr1.Close();
-                                                sr2.Close();
-                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                {
-                                                    sw.Write(replacementXML);
-                                                }
-                                                File.Delete(pathCellfinal + ".tmp");
-                                                File.Delete(pathCellfinal + ".tmp2");
-                                                bkr = true;
-                                                break;
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                    else if (pathCell.Contains("\\objectTranslations\\"))
-                                    {
-                                        string fieldMatched = matchLine.Replace("<name>", "");
-                                        fieldMatched = fieldMatched.Replace("</name>", "");
-                                        XmlNodeList NodeLista = doc.GetElementsByTagName("CustomObjectTranslation");
-                                        XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
-                                        foreach (XmlElement nodo in NodeLista2)
-                                        {
-                                            XmlNodeList nField = nodo.GetElementsByTagName("name");
-                                            if (nField[0].InnerText.Contains(fieldMatched))
-                                            {
-                                                nodo.ParentNode.RemoveChild(nodo);
-                                                int pFrom = pathCell.IndexOf("\\src\\");
-                                                String pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                                                System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\objectTranslations");
-                                                XmlWriterSettings settings = new XmlWriterSettings
-                                                {
-                                                    Encoding = Encoding.UTF8,
-                                                    Indent = true,
-                                                    IndentChars = "    ",
-                                                    NewLineChars = "\r\n",
-                                                    NewLineHandling = NewLineHandling.Replace,
-                                                    CloseOutput = true
-                                                };
-                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                                                doc.Save(writer);
-                                                writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                                                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                                                string xmlpart2 = xmlString.Substring(38);
-                                                string removable1 = ">\r\n            <!--";
-                                                string removable2 = "-->\r\n        </";
-                                                string removable3 = ">\r\n                <!--";
-                                                string removable4 = "-->\r\n            </";
-                                                string removable5 = "\'";
-                                                while (xmlpart2.Contains(removable1))
-                                                {
-                                                    xmlpart2 = xmlpart2.Replace(removable1, "><!--");
-                                                }
-                                                while (xmlpart2.Contains(removable2))
-                                                {
-                                                    xmlpart2 = xmlpart2.Replace(removable2, "--></");
-                                                }
-                                                while (xmlpart2.Contains(removable3))
-                                                {
-                                                    xmlpart2 = xmlpart2.Replace(removable3, "><!--");
-                                                }
-                                                while (xmlpart2.Contains(removable4))
-                                                {
-                                                    xmlpart2 = xmlpart2.Replace(removable4, "--></");
-                                                }
-                                                while (xmlpart2.Contains(removable5))
-                                                {
-                                                    xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
-                                                }
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                                                {
-                                                    sw.Write(xmlpart1 + xmlpart2);
-                                                    sw.WriteLine("");
-                                                }
-                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                                                StreamReader sr2 = File.OpenText(pathCell);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                                                {
-                                                    string fileline1;
-                                                    string fileline2;
-                                                    while ((fileline1 = sr1.ReadLine()) != null)
-                                                    {
-                                                        while ((fileline2 = sr2.ReadLine()) != null)
-                                                        {
-                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
-                                                            {
-                                                                sw.WriteLine(fileline2);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                sr1.Close();
-                                                sr2.Close();
-                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                                                {
-                                                    sw.Write(replacementXML);
-                                                }
-                                                File.Delete(pathCellfinal + ".tmp");
-                                                File.Delete(pathCellfinal + ".tmp2");
-                                                bkr = true;
-                                                break;
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                }
-                            }
-                            Cursor.Current = Cursors.Default;
-                            if (chkboxtrue)
-                            {
-                                MessageBox.Show("Task Completed!");
-                            }
-                            else
-                            {
-                                MessageBox.Show("There was no row checked", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                        }
+                        MessageBox.Show("There was no row checked", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
@@ -1515,12 +603,12 @@ namespace Field_Obliteration_Clean_Automation
 
         private void previewDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex != -1)
+            if (e.RowIndex != -1 && previewOn)
             {
                 DataGridViewSelectedRowCollection rowPrev = MainDGV.SelectedRows;
                 if (rowPrev.Count != 1)
                 {
-                    MessageBox.Show("Please select only one row", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select only one row.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -1534,6 +622,10 @@ namespace Field_Obliteration_Clean_Automation
                     preview.previewTextBoxLoad(sender, e, matchline, component, path);
                     preview.ShowDialog();
                 }
+            }
+            else if (!previewOn)
+            {
+                MessageBox.Show("Please perform a new search to re-enable the preview.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
