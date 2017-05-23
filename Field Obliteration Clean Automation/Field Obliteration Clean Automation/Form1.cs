@@ -30,17 +30,19 @@ namespace Field_Obliteration_Clean_Automation
                 SearchButton.Enabled = false;
         }
 
-        private void searchButtonClick(object sender, EventArgs e)
+        private bool searchButtonValidation(object sender, EventArgs e)
         {
             if (FieldTextBox.Text.Trim().Length != 0 && FieldTextBox.Text.Trim().Substring(FieldTextBox.Text.Trim().Length - 3, 3) != "__c")
             {
                 if (ObjectTextBox.Text.Trim().Length == 0)
                 {
                     MessageBox.Show("The field to be deleted must be a Custom Field\r\nMust define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
                 else
                 {
                     MessageBox.Show("The field to be deleted must be a Custom Field", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
             else if (FieldTextBox.Text.Trim().Length == 0)
@@ -48,17 +50,82 @@ namespace Field_Obliteration_Clean_Automation
                 if (ObjectTextBox.Text.Trim().Length == 0)
                 {
                     MessageBox.Show("Must define field to be deleted\r\nMust define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
                 else
                 {
                     MessageBox.Show("Must define field to be deleted", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
             else if (ObjectTextBox.Text.Trim().Length == 0)
             {
                 MessageBox.Show("Must define object", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
-            else {
+            else
+            {
+                return true;
+            }
+        }
+
+        private void searchButtonProcess(object sender, EventArgs e, string fileline, string fieldLower, string componentLower, FileInfo file, StreamReader filestr, string type)
+        {
+            if (type == "reportType" || type == "report")
+            {
+                while ((fileline = filestr.ReadLine()) != null)
+                {
+                    if (fileline.ToLower().Contains("." + fieldLower + "</field>") || fileline.ToLower().Contains(">" + fieldLower + "</field>") || fileline.ToLower().Contains("$" + fieldLower + "</field>"))
+                    {
+                        string match = "Partial";
+                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
+                        {
+                            match = "Full";
+                        }
+                        string fileName = file.Name.Replace("." + type, "");
+                        MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                        break;
+                    }
+                }
+            }
+            else if (type == "permissionset" || type == "profile")
+            {
+                while ((fileline = filestr.ReadLine()) != null)
+                {
+
+                    if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
+                    {
+                        string match = "Full";
+
+                        string fileName = file.Name.Replace("." + type, "");
+                        MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                        break;
+                    }
+                }
+            }
+            else if (type == "objectTranslation")
+            {
+                int pathint = file.FullName.IndexOf("\\objectTranslations\\") + 20;
+                if (file.FullName.Substring(pathint).ToLower() == (componentLower + "-en_US.objectTranslation").ToLower())
+                {
+                    while ((fileline = filestr.ReadLine()) != null)
+                    {
+                        if (fileline.ToLower().Contains("<name>" + fieldLower + "</name>"))
+                        {
+                            string match = "Full";
+                            string fileName = file.Name.Replace("." + type, "");
+                            MainDGV.Rows.Add(false, fileName, type, match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void searchButtonClick(object sender, EventArgs e)
+        {
+             if (searchButtonValidation(sender,e))
+            {
                 MainDGV.Rows.Clear();
                 Cursor.Current = Cursors.WaitCursor;
                 Task.Delay(2000);
@@ -82,69 +149,19 @@ namespace Field_Obliteration_Clean_Automation
                             {
                                 if (fileline.Contains("<ReportType"))
                                 {
-                                    while ((fileline = filestr.ReadLine()) != null)
-                                    {
-                                        if (fileline.ToLower().Contains("." + fieldLower + "</field>") || fileline.ToLower().Contains(">" + fieldLower + "</field>") || fileline.ToLower().Contains("$" + fieldLower + "</field>"))
-                                        {
-                                            string match = "Partial";
-                                            if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
-                                            {
-                                                match = "Full";
-                                            }
-                                            string fileName = file.Name.Replace(".reportType", "");
-                                            MainDGV.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                                            break;
-                                        }
-                                    }
+                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "reportType");
                                 }
                                 else if (fileline.Contains("<PermissionSet"))
                                 {
-                                    while ((fileline = filestr.ReadLine()) != null)
-                                    {
-
-                                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
-                                        {
-                                            string match = "Full";
-
-                                            string fileName = file.Name.Replace(".permissionset", "");
-                                            MainDGV.Rows.Add(false, fileName, "permissionset", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                                            break;
-                                        }
-                                    }
+                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "permissionset");
                                 }
                                 else if (fileline.Contains("<Profile"))
                                 {
-                                    while ((fileline = filestr.ReadLine()) != null)
-                                    {
-
-                                        if (fileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
-                                        {
-                                            string match;
-                                            match = "Full";
-                                            string fileName = file.Name.Replace(".profile", "");
-                                            MainDGV.Rows.Add(false, fileName, "profile", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                                            break;
-
-
-                                        }
-                                    }
+                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "profile");
                                 }
                                 else if (fileline.Contains("<CustomObjectTranslation"))
                                 {
-                                    int pathint = file.FullName.IndexOf("\\objectTranslations\\") + 20;
-                                    if (file.FullName.Substring(pathint).ToLower() == (component + "-en_US.objectTranslation").ToLower())
-                                        {
-                                        while ((fileline = filestr.ReadLine()) != null)
-                                        {
-                                            if (fileline.ToLower().Contains("<name>" + fieldLower + "</name>"))
-                                            {
-                                                string match = "Full";
-                                                string fileName = file.Name.Replace(".objectTranslation", "");
-                                                MainDGV.Rows.Add(false, fileName, "objectTranslation", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-                                                break;
-                                            }
-                                        }
-                                    }
+                                    searchButtonProcess(sender, e, fileline, fieldLower, componentLower, file, filestr, "objectTranslation");
                                 }
                             }
                         }
@@ -166,20 +183,7 @@ namespace Field_Obliteration_Clean_Automation
                                     {
                                         if (reportfileline.Contains("<Report"))
                                         {
-                                            while ((reportfileline = reportfilestr.ReadLine()) != null)
-                                            {
-                                                if (reportfileline.ToLower().Contains("." + fieldLower + "</field>") || reportfileline.ToLower().Contains(">" + fieldLower + "</field>") || reportfileline.ToLower().Contains("$" + fieldLower + "</field>"))
-                                                    {
-                                                    string match = "Partial";
-                                                    if (reportfileline.ToLower().Contains("<field>" + componentLower + "." + fieldLower + "</field>"))
-                                                    {
-                                                        match = "Full";
-                                                    }
-                                                    string reportfileName = reportfile.Name.Replace(".report", "");
-                                                    MainDGV.Rows.Add(false, reportfileName, "report", match, reportfileline.TrimStart(' ').TrimEnd(' '), reportfile.FullName);
-                                                    break;
-                                                }
-                                            }
+                                            searchButtonProcess(sender, e, reportfileline, fieldLower, componentLower, reportfile, reportfilestr, "report");
                                         }
                                     }
                                 }
@@ -268,17 +272,45 @@ namespace Field_Obliteration_Clean_Automation
                                                     NewLineHandling = NewLineHandling.Replace,
                                                     CloseOutput = true
                                                 };
-                                                writer = XmlWriter.Create(pathCellfinal, settings);
+                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                 doc.Save(writer);
                                                 writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                 string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                 string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                 {
                                                     sw.Write(xmlpart1 + xmlpart2);
                                                     sw.WriteLine("");
                                                 }
+
+                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                StreamReader sr2 = File.OpenText(pathCellfinal);
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                {
+                                                    string fileline1;
+                                                    string fileline2;
+                                                    while ((fileline1 = sr1.ReadLine()) != null)
+                                                    {
+                                                        while ((fileline2 = sr2.ReadLine()) != null)
+                                                        {
+                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                            {
+                                                                sw.WriteLine(fileline2);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                sr1.Close();
+                                                sr2.Close();
+                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                {
+                                                    sw.Write(replacementXML);
+                                                }
+                                                File.Delete(pathCellfinal + ".tmp");
+                                                File.Delete(pathCellfinal + ".tmp2");
                                                 bkr = true;
                                                 break;
                                             }
@@ -310,17 +342,45 @@ namespace Field_Obliteration_Clean_Automation
                                                 NewLineHandling = NewLineHandling.Replace,
                                                 CloseOutput = true
                                             };
-                                            writer = XmlWriter.Create(pathCellfinal, settings);
+                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                             doc.Save(writer);
                                             writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                             string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                             string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                             {
                                                 sw.Write(xmlpart1 + xmlpart2);
                                                 sw.WriteLine("");
                                             }
+
+                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                            StreamReader sr2 = File.OpenText(pathCellfinal);
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                            {
+                                                string fileline1;
+                                                string fileline2;
+                                                while ((fileline1 = sr1.ReadLine()) != null)
+                                                {
+                                                    while ((fileline2 = sr2.ReadLine()) != null)
+                                                    {
+                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                        {
+                                                            sw.WriteLine(fileline2);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            sr1.Close();
+                                            sr2.Close();
+                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            {
+                                                sw.Write(replacementXML);
+                                            }
+                                            File.Delete(pathCellfinal + ".tmp");
+                                            File.Delete(pathCellfinal + ".tmp2");
                                             bkr = true;
                                             break;
                                         }
@@ -352,17 +412,45 @@ namespace Field_Obliteration_Clean_Automation
                                                 NewLineHandling = NewLineHandling.Replace,
                                                 CloseOutput = true
                                             };
-                                            writer = XmlWriter.Create(pathCellfinal, settings);
+                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                             doc.Save(writer);
                                             writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                             string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                             string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                             {
                                                 sw.Write(xmlpart1 + xmlpart2);
                                                 sw.WriteLine("");
                                             }
+
+                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                            StreamReader sr2 = File.OpenText(pathCellfinal);
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                            {
+                                                string fileline1;
+                                                string fileline2;
+                                                while ((fileline1 = sr1.ReadLine()) != null)
+                                                {
+                                                    while ((fileline2 = sr2.ReadLine()) != null)
+                                                    {
+                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                        {
+                                                            sw.WriteLine(fileline2);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            sr1.Close();
+                                            sr2.Close();
+                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            {
+                                                sw.Write(replacementXML);
+                                            }
+                                            File.Delete(pathCellfinal + ".tmp");
+                                            File.Delete(pathCellfinal + ".tmp2");
                                             bkr = true;
                                             break;
                                         }
@@ -393,17 +481,45 @@ namespace Field_Obliteration_Clean_Automation
                                                 NewLineHandling = NewLineHandling.Replace,
                                                 CloseOutput = true
                                             };
-                                            writer = XmlWriter.Create(pathCellfinal, settings);
+                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                             doc.Save(writer);
                                             writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                             string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                             string xmlpart2 = xmlString.Substring(38);
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                             {
                                                 sw.Write(xmlpart1 + xmlpart2);
                                                 sw.WriteLine("");
                                             }
+
+                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                            StreamReader sr2 = File.OpenText(pathCellfinal);
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                            {
+                                                string fileline1;
+                                                string fileline2;
+                                                while ((fileline1 = sr1.ReadLine()) != null)
+                                                {
+                                                    while ((fileline2 = sr2.ReadLine()) != null)
+                                                    {
+                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                        {
+                                                            sw.WriteLine(fileline2);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            sr1.Close();
+                                            sr2.Close();
+                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            {
+                                                sw.Write(replacementXML);
+                                            }
+                                            File.Delete(pathCellfinal + ".tmp");
+                                            File.Delete(pathCellfinal + ".tmp2");
                                             bkr = true;
                                             break;
                                         }
@@ -434,10 +550,10 @@ namespace Field_Obliteration_Clean_Automation
                                                 NewLineHandling = NewLineHandling.Replace,
                                                 CloseOutput = true
                                             };
-                                            writer = XmlWriter.Create(pathCellfinal, settings);
+                                            writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                             doc.Save(writer);
                                             writer.Close();
-                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                            string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                             string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                             string xmlpart2 = xmlString.Substring(38);
                                             string removable1 = ">\r\n            <!--";
@@ -465,11 +581,38 @@ namespace Field_Obliteration_Clean_Automation
                                             {
                                                 xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
                                             }
-                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                             {
                                                 sw.Write(xmlpart1 + xmlpart2);
                                                 sw.WriteLine("");
                                             }
+                                            StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                            StreamReader sr2 = File.OpenText(pathCellfinal);
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                            {
+                                                string fileline1;
+                                                string fileline2;
+                                                while ((fileline1 = sr1.ReadLine()) != null)
+                                                {
+                                                    while ((fileline2 = sr2.ReadLine()) != null)
+                                                    {
+                                                        if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                        {
+                                                            sw.WriteLine(fileline2);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            sr1.Close();
+                                            sr2.Close();
+                                            string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                            using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                            {
+                                                sw.Write(replacementXML);
+                                            }
+                                            File.Delete(pathCellfinal + ".tmp");
+                                            File.Delete(pathCellfinal + ".tmp2");
                                             bkr = true;
                                             break;
                                         }
@@ -547,17 +690,44 @@ namespace Field_Obliteration_Clean_Automation
                                                             NewLineHandling = NewLineHandling.Replace,
                                                             CloseOutput = true
                                                         };
-                                                        writer = XmlWriter.Create(pathCellfinal, settings);
+                                                        writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                         doc.Save(writer);
                                                         writer.Close();
-                                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                        string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                         string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                         string xmlpart2 = xmlString.Substring(38);
-                                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                        using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                         {
                                                             sw.Write(xmlpart1 + xmlpart2);
                                                             sw.WriteLine("");
                                                         }
+                                                        StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                        StreamReader sr2 = File.OpenText(pathCell);
+                                                        using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                        {
+                                                            string fileline1;
+                                                            string fileline2;
+                                                            while ((fileline1 = sr1.ReadLine()) != null)
+                                                            {
+                                                                while ((fileline2 = sr2.ReadLine()) != null)
+                                                                {
+                                                                    if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                                    {
+                                                                        sw.WriteLine(fileline2);
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        sr1.Close();
+                                                        sr2.Close();
+                                                        string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                        using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                        {
+                                                            sw.Write(replacementXML);
+                                                        }
+                                                        File.Delete(pathCellfinal + ".tmp");
+                                                        File.Delete(pathCellfinal + ".tmp2");
                                                         bkr = true;
                                                         break;
                                                     }
@@ -589,17 +759,44 @@ namespace Field_Obliteration_Clean_Automation
                                                         NewLineHandling = NewLineHandling.Replace,
                                                         CloseOutput = true
                                                     };
-                                                    writer = XmlWriter.Create(pathCellfinal, settings);
+                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                     doc.Save(writer);
                                                     writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                     string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                     string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                     {
                                                         sw.Write(xmlpart1 + xmlpart2);
                                                         sw.WriteLine("");
                                                     }
+                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                    StreamReader sr2 = File.OpenText(pathCell);
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                    {
+                                                        string fileline1;
+                                                        string fileline2;
+                                                        while ((fileline1 = sr1.ReadLine()) != null)
+                                                        {
+                                                            while ((fileline2 = sr2.ReadLine()) != null)
+                                                            {
+                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                                {
+                                                                    sw.WriteLine(fileline2);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    sr1.Close();
+                                                    sr2.Close();
+                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    {
+                                                        sw.Write(replacementXML);
+                                                    }
+                                                    File.Delete(pathCellfinal + ".tmp");
+                                                    File.Delete(pathCellfinal + ".tmp2");
                                                     bkr = true;
                                                     break;
                                                 }
@@ -631,17 +828,44 @@ namespace Field_Obliteration_Clean_Automation
                                                         NewLineHandling = NewLineHandling.Replace,
                                                         CloseOutput = true
                                                     };
-                                                    writer = XmlWriter.Create(pathCellfinal, settings);
+                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                     doc.Save(writer);
                                                     writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                     string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                     string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                     {
                                                         sw.Write(xmlpart1 + xmlpart2);
                                                         sw.WriteLine("");
                                                     }
+                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                    StreamReader sr2 = File.OpenText(pathCell);
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                    {
+                                                        string fileline1;
+                                                        string fileline2;
+                                                        while ((fileline1 = sr1.ReadLine()) != null)
+                                                        {
+                                                            while ((fileline2 = sr2.ReadLine()) != null)
+                                                            {
+                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                                {
+                                                                    sw.WriteLine(fileline2);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    sr1.Close();
+                                                    sr2.Close();
+                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    {
+                                                        sw.Write(replacementXML);
+                                                    }
+                                                    File.Delete(pathCellfinal + ".tmp");
+                                                    File.Delete(pathCellfinal + ".tmp2");
                                                     bkr = true;
                                                     break;
                                                 }
@@ -672,17 +896,44 @@ namespace Field_Obliteration_Clean_Automation
                                                         NewLineHandling = NewLineHandling.Replace,
                                                         CloseOutput = true
                                                     };
-                                                    writer = XmlWriter.Create(pathCellfinal, settings);
+                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                     doc.Save(writer);
                                                     writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                     string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                     string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                     {
                                                         sw.Write(xmlpart1 + xmlpart2);
                                                         sw.WriteLine("");
                                                     }
+                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                    StreamReader sr2 = File.OpenText(pathCell);
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                    {
+                                                        string fileline1;
+                                                        string fileline2;
+                                                        while ((fileline1 = sr1.ReadLine()) != null)
+                                                        {
+                                                            while ((fileline2 = sr2.ReadLine()) != null)
+                                                            {
+                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                                {
+                                                                    sw.WriteLine(fileline2);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    sr1.Close();
+                                                    sr2.Close();
+                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    {
+                                                        sw.Write(replacementXML);
+                                                    }
+                                                    File.Delete(pathCellfinal + ".tmp");
+                                                    File.Delete(pathCellfinal + ".tmp2");
                                                     bkr = true;
                                                     break;
                                                 }
@@ -713,10 +964,10 @@ namespace Field_Obliteration_Clean_Automation
                                                         NewLineHandling = NewLineHandling.Replace,
                                                         CloseOutput = true
                                                     };
-                                                    writer = XmlWriter.Create(pathCellfinal, settings);
+                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                     doc.Save(writer);
                                                     writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                     string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                     string xmlpart2 = xmlString.Substring(38);
                                                     string removable1 = ">\r\n            <!--";
@@ -744,11 +995,38 @@ namespace Field_Obliteration_Clean_Automation
                                                     {
                                                         xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
                                                     }
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                     {
                                                         sw.Write(xmlpart1 + xmlpart2);
                                                         sw.WriteLine("");
                                                     }
+                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                    StreamReader sr2 = File.OpenText(pathCell);
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                    {
+                                                        string fileline1;
+                                                        string fileline2;
+                                                        while ((fileline1 = sr1.ReadLine()) != null)
+                                                        {
+                                                            while ((fileline2 = sr2.ReadLine()) != null)
+                                                            {
+                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
+                                                                {
+                                                                    sw.WriteLine(fileline2);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    sr1.Close();
+                                                    sr2.Close();
+                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    {
+                                                        sw.Write(replacementXML);
+                                                    }
+                                                    File.Delete(pathCellfinal + ".tmp");
+                                                    File.Delete(pathCellfinal + ".tmp2");
                                                     bkr = true;
                                                     break;
                                                 }
@@ -803,7 +1081,7 @@ namespace Field_Obliteration_Clean_Automation
                                             foreach (XmlElement nodo in NodeLista3)
                                             {
                                                 XmlNodeList nField = nodo.GetElementsByTagName("field");
-                                                if (nField[0].InnerText.Contains(fieldMatched))
+                                                if (nField[0].InnerText.ToLower().Contains(fieldMatched))
                                                 {
                                                     nodo.ParentNode.RemoveChild(nodo);
                                                     int pFrom = pathCell.IndexOf("\\src\\");
@@ -818,17 +1096,44 @@ namespace Field_Obliteration_Clean_Automation
                                                         NewLineHandling = NewLineHandling.Replace,
                                                         CloseOutput = true
                                                     };
-                                                    writer = XmlWriter.Create(pathCellfinal, settings);
+                                                    writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                     doc.Save(writer);
                                                     writer.Close();
-                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                    string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                     string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                     string xmlpart2 = xmlString.Substring(38);
-                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                     {
                                                         sw.Write(xmlpart1 + xmlpart2);
                                                         sw.WriteLine("");
                                                     }
+                                                    StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                    StreamReader sr2 = File.OpenText(pathCell);
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                    {
+                                                        string fileline1;
+                                                        string fileline2;
+                                                        while ((fileline1 = sr1.ReadLine()) != null)
+                                                        {
+                                                            while ((fileline2 = sr2.ReadLine()) != null)
+                                                            {
+                                                                if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
+                                                                {
+                                                                    sw.WriteLine(fileline2);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    sr1.Close();
+                                                    sr2.Close();
+                                                    string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                    using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                    {
+                                                        sw.Write(replacementXML);
+                                                    }
+                                                    File.Delete(pathCellfinal + ".tmp");
+                                                    File.Delete(pathCellfinal + ".tmp2");
                                                     bkr = true;
                                                     break;
                                                 }
@@ -860,17 +1165,44 @@ namespace Field_Obliteration_Clean_Automation
                                                     NewLineHandling = NewLineHandling.Replace,
                                                     CloseOutput = true
                                                 };
-                                                writer = XmlWriter.Create(pathCellfinal, settings);
+                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                 doc.Save(writer);
                                                 writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                 string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                 string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                 {
                                                     sw.Write(xmlpart1 + xmlpart2);
                                                     sw.WriteLine("");
                                                 }
+                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                StreamReader sr2 = File.OpenText(pathCell);
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                {
+                                                    string fileline1;
+                                                    string fileline2;
+                                                    while ((fileline1 = sr1.ReadLine()) != null)
+                                                    {
+                                                        while ((fileline2 = sr2.ReadLine()) != null)
+                                                        {
+                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
+                                                            {
+                                                                sw.WriteLine(fileline2);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                sr1.Close();
+                                                sr2.Close();
+                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                {
+                                                    sw.Write(replacementXML);
+                                                }
+                                                File.Delete(pathCellfinal + ".tmp");
+                                                File.Delete(pathCellfinal + ".tmp2");
                                                 bkr = true;
                                                 break;
                                             }
@@ -902,17 +1234,44 @@ namespace Field_Obliteration_Clean_Automation
                                                     NewLineHandling = NewLineHandling.Replace,
                                                     CloseOutput = true
                                                 };
-                                                writer = XmlWriter.Create(pathCellfinal, settings);
+                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                 doc.Save(writer);
                                                 writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                 string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                 string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                 {
                                                     sw.Write(xmlpart1 + xmlpart2);
                                                     sw.WriteLine("");
                                                 }
+                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                StreamReader sr2 = File.OpenText(pathCell);
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                {
+                                                    string fileline1;
+                                                    string fileline2;
+                                                    while ((fileline1 = sr1.ReadLine()) != null)
+                                                    {
+                                                        while ((fileline2 = sr2.ReadLine()) != null)
+                                                        {
+                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
+                                                            {
+                                                                sw.WriteLine(fileline2);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                sr1.Close();
+                                                sr2.Close();
+                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                {
+                                                    sw.Write(replacementXML);
+                                                }
+                                                File.Delete(pathCellfinal + ".tmp");
+                                                File.Delete(pathCellfinal + ".tmp2");
                                                 bkr = true;
                                                 break;
                                             }
@@ -943,17 +1302,44 @@ namespace Field_Obliteration_Clean_Automation
                                                     NewLineHandling = NewLineHandling.Replace,
                                                     CloseOutput = true
                                                 };
-                                                writer = XmlWriter.Create(pathCellfinal, settings);
+                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                 doc.Save(writer);
                                                 writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                 string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                 string xmlpart2 = xmlString.Substring(38);
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                 {
                                                     sw.Write(xmlpart1 + xmlpart2);
                                                     sw.WriteLine("");
                                                 }
+                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                StreamReader sr2 = File.OpenText(pathCell);
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                {
+                                                    string fileline1;
+                                                    string fileline2;
+                                                    while ((fileline1 = sr1.ReadLine()) != null)
+                                                    {
+                                                        while ((fileline2 = sr2.ReadLine()) != null)
+                                                        {
+                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
+                                                            {
+                                                                sw.WriteLine(fileline2);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                sr1.Close();
+                                                sr2.Close();
+                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                {
+                                                    sw.Write(replacementXML);
+                                                }
+                                                File.Delete(pathCellfinal + ".tmp");
+                                                File.Delete(pathCellfinal + ".tmp2");
                                                 bkr = true;
                                                 break;
                                             }
@@ -984,10 +1370,10 @@ namespace Field_Obliteration_Clean_Automation
                                                     NewLineHandling = NewLineHandling.Replace,
                                                     CloseOutput = true
                                                 };
-                                                writer = XmlWriter.Create(pathCellfinal, settings);
+                                                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
                                                 doc.Save(writer);
                                                 writer.Close();
-                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal);
+                                                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
                                                 string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
                                                 string xmlpart2 = xmlString.Substring(38);
                                                 string removable1 = ">\r\n            <!--";
@@ -1015,11 +1401,38 @@ namespace Field_Obliteration_Clean_Automation
                                                 {
                                                     xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
                                                 }
-                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
                                                 {
                                                     sw.Write(xmlpart1 + xmlpart2);
                                                     sw.WriteLine("");
                                                 }
+                                                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
+                                                StreamReader sr2 = File.OpenText(pathCell);
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
+                                                {
+                                                    string fileline1;
+                                                    string fileline2;
+                                                    while ((fileline1 = sr1.ReadLine()) != null)
+                                                    {
+                                                        while ((fileline2 = sr2.ReadLine()) != null)
+                                                        {
+                                                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t"))
+                                                            {
+                                                                sw.WriteLine(fileline2);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                sr1.Close();
+                                                sr2.Close();
+                                                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
+                                                using (StreamWriter sw = File.CreateText(pathCellfinal))
+                                                {
+                                                    sw.Write(replacementXML);
+                                                }
+                                                File.Delete(pathCellfinal + ".tmp");
+                                                File.Delete(pathCellfinal + ".tmp2");
                                                 bkr = true;
                                                 break;
                                             }
@@ -1098,7 +1511,6 @@ namespace Field_Obliteration_Clean_Automation
         {
             AboutForm about = new AboutForm();
             about.ShowDialog();
-            //MessageBox.Show("\t\tVersion 1.0\r\n\n\tDeveloped by D'Andrea López Fabrizio Carlo\r\n\n\tSpecial Thanks to MMS Ops Dev ADC Team\r\n\n\tFor bugs or improvements send an email to:\n\r\tf.dandrea.lopez@accenture.com");
         }
 
         private void previewDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1180,23 +1592,5 @@ namespace Field_Obliteration_Clean_Automation
         }
 
     }
-
-        /*private void findFiles()
-{
-while ((fileline = filestr.ReadLine()) != null)
-{
-if (fileline.Contains(field + "</field>"))
-{
-string match = "Partial";
-if (fileline.Contains(component + "." + field + "</field>"))
-{
-match = "Full";
-}
-string fileName = file.Name.Replace(".reportType", "");
-dataGridView1.Rows.Add(false, fileName, "reportType", match, fileline.TrimStart(' ').TrimEnd(' '), file.FullName);
-break;
-}
-}
-}*/
-    
+        
 }
