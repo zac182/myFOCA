@@ -47,6 +47,7 @@
             this.SelectAllButton = new System.Windows.Forms.Button();
             this.UnselectAllButton = new System.Windows.Forms.Button();
             this.PathGroupBox = new System.Windows.Forms.GroupBox();
+            this.srcAsDestCheckBox = new System.Windows.Forms.CheckBox();
             this.LoadPathButton = new System.Windows.Forms.Button();
             this.PathTextBox = new System.Windows.Forms.TextBox();
             this.DGVCover = new System.Windows.Forms.PictureBox();
@@ -57,7 +58,6 @@
             this.MenuStrip = new System.Windows.Forms.MenuStrip();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectMatchedButton = new System.Windows.Forms.Button();
-            this.srcAsDestCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.MainDGV)).BeginInit();
             this.PathGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVCover)).BeginInit();
@@ -71,11 +71,11 @@
             this.SearchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SearchButton.Enabled = false;
             this.SearchButton.Image = ((System.Drawing.Image)(resources.GetObject("SearchButton.Image")));
-            this.SearchButton.Location = new System.Drawing.Point(906, 653);
+            this.SearchButton.Location = new System.Drawing.Point(720, 585);
             this.SearchButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(117, 54);
-            this.SearchButton.TabIndex = 8;
+            this.SearchButton.TabIndex = 9;
             this.SearchButton.Text = "   Search     Field";
             this.SearchButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.SearchButton.UseVisualStyleBackColor = true;
@@ -84,7 +84,7 @@
             // FieldTextBox
             // 
             this.FieldTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FieldTextBox.Location = new System.Drawing.Point(728, 34);
+            this.FieldTextBox.Location = new System.Drawing.Point(542, 34);
             this.FieldTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FieldTextBox.Name = "FieldTextBox";
             this.FieldTextBox.Size = new System.Drawing.Size(356, 21);
@@ -116,7 +116,7 @@
             this.MainDGV.RowHeadersVisible = false;
             this.MainDGV.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             this.MainDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.MainDGV.Size = new System.Drawing.Size(1134, 488);
+            this.MainDGV.Size = new System.Drawing.Size(948, 420);
             this.MainDGV.TabIndex = 7;
             this.MainDGV.TabStop = false;
             this.MainDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.previewDoubleClick);
@@ -177,15 +177,23 @@
             this.CleanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CleanButton.Enabled = false;
             this.CleanButton.Image = ((System.Drawing.Image)(resources.GetObject("CleanButton.Image")));
-            this.CleanButton.Location = new System.Drawing.Point(1031, 653);
+            this.CleanButton.Location = new System.Drawing.Point(845, 585);
             this.CleanButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CleanButton.Name = "CleanButton";
             this.CleanButton.Size = new System.Drawing.Size(117, 54);
-            this.CleanButton.TabIndex = 9;
+            this.CleanButton.TabIndex = 10;
             this.CleanButton.Text = "Clean References";
             this.CleanButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.CleanButton.UseVisualStyleBackColor = true;
             this.CleanButton.Click += new System.EventHandler(this.cleanButtonClick);
+            // 
+            // LoadFolderDialog
+            // 
+            this.LoadFolderDialog.Description = "Select the src folder to be used as source.";
+            // 
+            // SaveFolderDialog
+            // 
+            this.SaveFolderDialog.Description = "Select the root folder in which \n the src folder will be created or modified.";
             // 
             // ObjectTextBox
             // 
@@ -200,7 +208,7 @@
             // 
             this.FieldLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.FieldLabel.AutoSize = true;
-            this.FieldLabel.Location = new System.Drawing.Point(684, 37);
+            this.FieldLabel.Location = new System.Drawing.Point(498, 37);
             this.FieldLabel.Name = "FieldLabel";
             this.FieldLabel.Size = new System.Drawing.Size(38, 18);
             this.FieldLabel.TabIndex = 5;
@@ -220,11 +228,11 @@
             this.SelectAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SelectAllButton.Enabled = false;
             this.SelectAllButton.Image = ((System.Drawing.Image)(resources.GetObject("SelectAllButton.Image")));
-            this.SelectAllButton.Location = new System.Drawing.Point(12, 653);
+            this.SelectAllButton.Location = new System.Drawing.Point(12, 585);
             this.SelectAllButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SelectAllButton.Name = "SelectAllButton";
             this.SelectAllButton.Size = new System.Drawing.Size(117, 54);
-            this.SelectAllButton.TabIndex = 5;
+            this.SelectAllButton.TabIndex = 6;
             this.SelectAllButton.Text = " Select All";
             this.SelectAllButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.SelectAllButton.UseVisualStyleBackColor = true;
@@ -235,11 +243,11 @@
             this.UnselectAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.UnselectAllButton.Enabled = false;
             this.UnselectAllButton.Image = ((System.Drawing.Image)(resources.GetObject("UnselectAllButton.Image")));
-            this.UnselectAllButton.Location = new System.Drawing.Point(258, 654);
+            this.UnselectAllButton.Location = new System.Drawing.Point(258, 586);
             this.UnselectAllButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.UnselectAllButton.Name = "UnselectAllButton";
             this.UnselectAllButton.Size = new System.Drawing.Size(117, 54);
-            this.UnselectAllButton.TabIndex = 7;
+            this.UnselectAllButton.TabIndex = 8;
             this.UnselectAllButton.Text = " Unselect All";
             this.UnselectAllButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.UnselectAllButton.UseVisualStyleBackColor = true;
@@ -256,16 +264,28 @@
             this.PathGroupBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PathGroupBox.Name = "PathGroupBox";
             this.PathGroupBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PathGroupBox.Size = new System.Drawing.Size(1130, 76);
+            this.PathGroupBox.Size = new System.Drawing.Size(944, 76);
             this.PathGroupBox.TabIndex = 8;
             this.PathGroupBox.TabStop = false;
             this.PathGroupBox.Text = "Path";
+            // 
+            // srcAsDestCheckBox
+            // 
+            this.srcAsDestCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.srcAsDestCheckBox.AutoSize = true;
+            this.srcAsDestCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.srcAsDestCheckBox.Location = new System.Drawing.Point(743, 30);
+            this.srcAsDestCheckBox.Name = "srcAsDestCheckBox";
+            this.srcAsDestCheckBox.Size = new System.Drawing.Size(195, 22);
+            this.srcAsDestCheckBox.TabIndex = 5;
+            this.srcAsDestCheckBox.Text = "Use this as Destination Folder?";
+            this.srcAsDestCheckBox.UseVisualStyleBackColor = true;
             // 
             // LoadPathButton
             // 
             this.LoadPathButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadPathButton.Image = ((System.Drawing.Image)(resources.GetObject("LoadPathButton.Image")));
-            this.LoadPathButton.Location = new System.Drawing.Point(894, 22);
+            this.LoadPathButton.Location = new System.Drawing.Point(708, 22);
             this.LoadPathButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LoadPathButton.Name = "LoadPathButton";
             this.LoadPathButton.Size = new System.Drawing.Size(29, 35);
@@ -281,7 +301,7 @@
             this.PathTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PathTextBox.Name = "PathTextBox";
             this.PathTextBox.ReadOnly = true;
-            this.PathTextBox.Size = new System.Drawing.Size(881, 21);
+            this.PathTextBox.Size = new System.Drawing.Size(695, 21);
             this.PathTextBox.TabIndex = 3;
             this.PathTextBox.TextChanged += new System.EventHandler(this.enableSeachButton);
             // 
@@ -295,7 +315,7 @@
             this.DGVCover.Location = new System.Drawing.Point(14, 158);
             this.DGVCover.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DGVCover.Name = "DGVCover";
-            this.DGVCover.Size = new System.Drawing.Size(1134, 488);
+            this.DGVCover.Size = new System.Drawing.Size(948, 420);
             this.DGVCover.TabIndex = 9;
             this.DGVCover.TabStop = false;
             // 
@@ -306,10 +326,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DGVCoverImg.Image = ((System.Drawing.Image)(resources.GetObject("DGVCoverImg.Image")));
             this.DGVCoverImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("DGVCoverImg.InitialImage")));
-            this.DGVCoverImg.Location = new System.Drawing.Point(409, 158);
+            this.DGVCoverImg.Location = new System.Drawing.Point(14, 158);
             this.DGVCoverImg.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DGVCoverImg.Name = "DGVCoverImg";
-            this.DGVCoverImg.Size = new System.Drawing.Size(365, 488);
+            this.DGVCoverImg.Size = new System.Drawing.Size(948, 419);
             this.DGVCoverImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.DGVCoverImg.TabIndex = 10;
             this.DGVCoverImg.TabStop = false;
@@ -319,10 +339,10 @@
             this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TotalFieldsStatusLabel,
             this.SelectedFieldsStatusLabel});
-            this.StatusBar.Location = new System.Drawing.Point(0, 711);
+            this.StatusBar.Location = new System.Drawing.Point(0, 643);
             this.StatusBar.Name = "StatusBar";
             this.StatusBar.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.StatusBar.Size = new System.Drawing.Size(1164, 22);
+            this.StatusBar.Size = new System.Drawing.Size(978, 22);
             this.StatusBar.TabIndex = 12;
             this.StatusBar.Text = "statusStrip1";
             // 
@@ -345,7 +365,7 @@
             this.MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip.Name = "MenuStrip";
             this.MenuStrip.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
-            this.MenuStrip.Size = new System.Drawing.Size(1164, 25);
+            this.MenuStrip.Size = new System.Drawing.Size(978, 25);
             this.MenuStrip.TabIndex = 13;
             this.MenuStrip.TabStop = true;
             this.MenuStrip.Text = "menuStrip1";
@@ -362,41 +382,21 @@
             this.SelectMatchedButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SelectMatchedButton.Enabled = false;
             this.SelectMatchedButton.Image = ((System.Drawing.Image)(resources.GetObject("SelectMatchedButton.Image")));
-            this.SelectMatchedButton.Location = new System.Drawing.Point(135, 654);
+            this.SelectMatchedButton.Location = new System.Drawing.Point(135, 586);
             this.SelectMatchedButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SelectMatchedButton.Name = "SelectMatchedButton";
             this.SelectMatchedButton.Size = new System.Drawing.Size(117, 54);
-            this.SelectMatchedButton.TabIndex = 6;
+            this.SelectMatchedButton.TabIndex = 7;
             this.SelectMatchedButton.Text = " Select Full Matched";
             this.SelectMatchedButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.SelectMatchedButton.UseVisualStyleBackColor = true;
             this.SelectMatchedButton.Click += new System.EventHandler(this.selectMatchedButtonClick);
             // 
-            // srcAsDestCheckBox
-            // 
-            this.srcAsDestCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.srcAsDestCheckBox.AutoSize = true;
-            this.srcAsDestCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.srcAsDestCheckBox.Location = new System.Drawing.Point(929, 30);
-            this.srcAsDestCheckBox.Name = "srcAsDestCheckBox";
-            this.srcAsDestCheckBox.Size = new System.Drawing.Size(195, 22);
-            this.srcAsDestCheckBox.TabIndex = 6;
-            this.srcAsDestCheckBox.Text = "Use this as Destination Folder?";
-            this.srcAsDestCheckBox.UseVisualStyleBackColor = true;
-            //
-            // SaveFolderDialog
-            //
-            this.SaveFolderDialog.Description = "Select the root folder in which \n the src folder will be created or modified.";
-            //
-            // LoadFolderDialog
-            //
-            this.LoadFolderDialog.Description = "Select the src folder to be used as source.";
-            // 
             // MainApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1164, 733);
+            this.ClientSize = new System.Drawing.Size(978, 665);
             this.Controls.Add(this.SelectMatchedButton);
             this.Controls.Add(this.StatusBar);
             this.Controls.Add(this.MenuStrip);
@@ -413,7 +413,7 @@
             this.Controls.Add(this.DGVCover);
             this.Controls.Add(this.MainDGV);
             this.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MenuStrip;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

@@ -27,5 +27,11 @@ namespace Field_Obliteration_Clean_Automation
         {
             System.Diagnostics.Process.Start("http://p.yusukekamiyamane.com/");
         }
+
+        private void SpecialThanksLabel_Click(object sender, EventArgs e)
+        {
+            Form4 easterEgg = new Form4();
+            easterEgg.ShowDialog();
+        }
     }
 }

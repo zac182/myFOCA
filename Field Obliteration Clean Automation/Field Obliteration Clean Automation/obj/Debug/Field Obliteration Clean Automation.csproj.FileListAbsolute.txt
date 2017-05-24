@@ -22,3 +22,4 @@ C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.MainApp.resources
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.AboutForm.resources
 C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.PreviewForm.resources
+C:\Users\f.dandrea.lopez\Source\Repos\myFOCA\Field Obliteration Clean Automation\Field Obliteration Clean Automation\obj\Debug\Field_Obliteration_Clean_Automation.Form4.resources

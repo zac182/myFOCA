@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml;
 using System.Configuration;
+using System.Net;
 
 namespace Field_Obliteration_Clean_Automation
 {
@@ -533,7 +534,7 @@ namespace Field_Obliteration_Clean_Automation
                     Cursor.Current = Cursors.Default;
                     if (chkboxtrue)
                     {
-                        MessageBox.Show("Task Completed!", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show("Task Completed!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         previewOn = false;
                     }
                     else
@@ -637,6 +638,25 @@ namespace Field_Obliteration_Clean_Automation
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Interval = 10; // in miliseconds
             timer1.Start();
+            try
+            {
+                WebClient download = new WebClient();
+                string orig = download.DownloadString("https://raw.githubusercontent.com/fabriziodandrea/myFOCA/master/Field%20Obliteration%20Clean%20Automation/Field%20Obliteration%20Clean%20Automation/Form1.cs");
+                if (!orig.Contains(Text))
+                {
+                    DialogResult result = MessageBox.Show("There is a new version available!\nDownload it now?","Good News",MessageBoxButtons.YesNo,MessageBoxIcon.Information);
+                    if (result == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://myoffice.accenture.com/personal/f_dandrea_lopez_accenture_com/_layouts/15/guestaccess.aspx?guestaccesstoken=boDb5BRdrnYTXnW0YG9KJPEY1PQ9aZ3NE2KlGFiCLz4%3d&docid=2_05fd3fb8b40c44299bae36dfe8fed05f7&rev=1");
+                        Close();
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Please verify your internet connection\n there might be a new version available.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
         }
 
         private void dataGridView1_Click_1(object sender, EventArgs e)
