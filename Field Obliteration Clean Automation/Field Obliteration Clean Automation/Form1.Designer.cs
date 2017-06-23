@@ -38,7 +38,6 @@
             this.Match = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MatchedLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CleanButton = new System.Windows.Forms.Button();
             this.LoadFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.SaveFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ObjectTextBox = new System.Windows.Forms.TextBox();
@@ -119,7 +118,7 @@
             this.MainDGV.Size = new System.Drawing.Size(948, 420);
             this.MainDGV.TabIndex = 7;
             this.MainDGV.TabStop = false;
-            this.MainDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.previewDoubleClick);
+            //this.MainDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.previewDoubleClick);
             this.MainDGV.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.MainDGV.Click += new System.EventHandler(this.dataGridView1_Click_1);
             // 
@@ -171,21 +170,6 @@
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
             this.Path.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // CleanButton
-            // 
-            this.CleanButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CleanButton.Enabled = false;
-            this.CleanButton.Image = ((System.Drawing.Image)(resources.GetObject("CleanButton.Image")));
-            this.CleanButton.Location = new System.Drawing.Point(845, 585);
-            this.CleanButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.CleanButton.Name = "CleanButton";
-            this.CleanButton.Size = new System.Drawing.Size(117, 54);
-            this.CleanButton.TabIndex = 10;
-            this.CleanButton.Text = "Clean References";
-            this.CleanButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.CleanButton.UseVisualStyleBackColor = true;
-            this.CleanButton.Click += new System.EventHandler(this.cleanButtonClick);
             // 
             // LoadFolderDialog
             // 
@@ -407,7 +391,6 @@
             this.Controls.Add(this.ObjectLabel);
             this.Controls.Add(this.FieldLabel);
             this.Controls.Add(this.ObjectTextBox);
-            this.Controls.Add(this.CleanButton);
             this.Controls.Add(this.FieldTextBox);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.DGVCover);
@@ -440,7 +423,6 @@
         private System.Windows.Forms.Button SearchButton;
         private System.Windows.Forms.TextBox FieldTextBox;
         private System.Windows.Forms.DataGridView MainDGV;
-        private System.Windows.Forms.Button CleanButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn Component;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Match;

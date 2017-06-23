@@ -180,6 +180,28 @@ namespace Field_Obliteration_Clean_Automation
             }
         }
 
+        private void childNodeAnalysis (object sender, EventArgs e, XmlNodeList child, string fieldLower, string typeFile, FileInfo file)
+        {
+            foreach(XmlNode child2 in child)
+            {
+                if(child2.HasChildNodes)
+                {
+                    foreach(XmlNodeList child3 in child2)
+                    {
+                        childNodeAnalysis(sender, e, child3, fieldLower, typeFile, file);
+                    }
+                }
+                else
+                {
+                    if (child2.InnerText.ToLower().Contains(fieldLower))
+                    {
+                        string match = "TRUE";
+                        MainDGV.Rows.Add(false, "", typeFile, match, child2.InnerText, file.FullName);
+                    }
+                }
+            }
+        }
+
         private void searchButtonClick(object sender, EventArgs e)
         {
             if (searchButtonValidation(sender, e))
@@ -223,7 +245,6 @@ namespace Field_Obliteration_Clean_Automation
                                 {
                                     searchButtonProcess(sender, e, fieldLower, componentLower, file, filestr, "objectTranslation", "CustomObjectTranslation", doc);
                                 }
-
                             }
                         }
                         else if (dir.Name == "reports")
@@ -249,6 +270,33 @@ namespace Field_Obliteration_Clean_Automation
                                 }
                             }
                         }
+                        else
+                        {
+                            FileInfo[] files = dir.GetFiles();
+                            foreach (FileInfo file in files)
+                            {
+                                StreamReader filestr = file.OpenText();
+                                string fileline;
+                                while ((fileline = filestr.ReadLine()) != null)
+                                {
+                                    searchButtonProcess1(sender, e, fieldLower, componentLower, file, filestr, "OTHER", fileline);
+                                }
+                            }
+                            DirectoryInfo[] dirs2 = dir.GetDirectories();
+                            foreach (DirectoryInfo dir2 in dirs2)
+                            {
+                                files = dir2.GetFiles();
+                                foreach (FileInfo file in files)
+                                {
+                                    StreamReader filestr = file.OpenText();
+                                    string fileline;
+                                    while ((fileline = filestr.ReadLine()) != null)
+                                    {
+                                        searchButtonProcess1(sender, e, fieldLower, componentLower, file, filestr, "OTHER", fileline);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (MainDGV.RowCount != 0 && FieldTextBox.TextLength != 0)
                     {
@@ -256,7 +304,7 @@ namespace Field_Obliteration_Clean_Automation
                         SelectedFieldsStatusLabel.Text = "Selected files: 0";
                         DGVCover.Hide();
                         DGVCoverImg.Hide();
-                        CleanButton.Enabled = true;
+                        //CleanButton.Enabled = true;
                         SelectAllButton.Enabled = true;
                         UnselectAllButton.Enabled = true;
                         SelectMatchedButton.Enabled = true;
@@ -268,7 +316,7 @@ namespace Field_Obliteration_Clean_Automation
                         TotalFieldsStatusLabel.Text = "Total files found: 0";
                         DGVCover.Show();
                         DGVCoverImg.Show();
-                        CleanButton.Enabled = false;
+                        //CleanButton.Enabled = false;
                         SelectAllButton.Enabled = false;
                         UnselectAllButton.Enabled = false;
                         SelectMatchedButton.Enabled = false;
@@ -283,315 +331,19 @@ namespace Field_Obliteration_Clean_Automation
 
             }
         }
-
-        private void fileRenew(object sender, EventArgs e, string pathCell, XmlDocument doc, XmlWriter writer, string typeFile, DataGridViewRow row, bool srcAsDest, bool existDir)
+        private void searchButtonProcess1(object sender, EventArgs e, string fieldLower, string componentLower, FileInfo file, StreamReader filestr, string type, string fileline)
         {
-            try
+            int i = 1;
+            while ((fileline = filestr.ReadLine()) != null)
             {
-                string pathCellfinal;
-                int pFrom = pathCell.IndexOf("\\src\\");
-                if (typeFile == "report")
+                if (fileline.ToLower().Contains(fieldLower))
                 {
-                    if (srcAsDest)
-                    {
-                        pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                        String reportFolder = pathCell.Substring(pFrom + 4);
-                        reportFolder = reportFolder.Replace(row.Cells[1].Value.ToString(), "");
-                        System.IO.Directory.CreateDirectory(PathTextBox.Text + reportFolder);
-                    }
-                    else
-                    {
-                        pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                        String reportFolder = pathCell.Substring(pFrom);
-                        reportFolder = reportFolder.Replace(row.Cells[1].Value.ToString(), "");
-                        System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + reportFolder);
-                    }
+                    string match = "TRUE";
+                    MainDGV.Rows.Add(false, "", "LINE: " + i, match, fileline, file.FullName);
                 }
-                else
-                {
-                    if (srcAsDest)
-                    {
-                        pathCellfinal = PathTextBox.Text + pathCell.Substring(pFrom + 4);
-                        System.IO.Directory.CreateDirectory(PathTextBox.Text + "\\" + typeFile);
-                    }
-                    else
-                    {
-                        pathCellfinal = SaveFolderDialog.SelectedPath + pathCell.Substring(pFrom);
-                        System.IO.Directory.CreateDirectory(SaveFolderDialog.SelectedPath + "\\src\\" + typeFile);
-                    }
-                }
-                XmlWriterSettings settings = new XmlWriterSettings
-                {
-                    Encoding = Encoding.UTF8,
-                    Indent = true,
-                    IndentChars = "    ",
-                    NewLineChars = "\r\n",
-                    NewLineHandling = NewLineHandling.Replace,
-                    CloseOutput = true
-                };
-                writer = XmlWriter.Create(pathCellfinal + ".tmp", settings);
-                doc.Save(writer);
-                writer.Close();
-                string xmlString = System.IO.File.ReadAllText(pathCellfinal + ".tmp");
-                string xmlpart1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-                string xmlpart2 = xmlString.Substring(38);
-                if (typeFile == "objectTranslations")
-                {
-                    string removable1 = ">\r\n            <!--";
-                    string removable2 = "-->\r\n        </";
-                    string removable3 = ">\r\n                <!--";
-                    string removable4 = "-->\r\n            </";
-                    string removable5 = "\'";
-                    while (xmlpart2.Contains(removable1))
-                    {
-                        xmlpart2 = xmlpart2.Replace(removable1, "><!--");
-                    }
-                    while (xmlpart2.Contains(removable2))
-                    {
-                        xmlpart2 = xmlpart2.Replace(removable2, "--></");
-                    }
-                    while (xmlpart2.Contains(removable3))
-                    {
-                        xmlpart2 = xmlpart2.Replace(removable3, "><!--");
-                    }
-                    while (xmlpart2.Contains(removable4))
-                    {
-                        xmlpart2 = xmlpart2.Replace(removable4, "--></");
-                    }
-                    while (xmlpart2.Contains(removable5))
-                    {
-                        xmlpart2 = xmlpart2.Replace(removable5, "&apos;");
-                    }
-                }
-                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp"))
-                {
-                    sw.Write(xmlpart1 + xmlpart2);
-                    sw.WriteLine("");
-                }
-
-                StreamReader sr1 = File.OpenText(pathCellfinal + ".tmp");
-                StreamReader sr2;
-                if (srcAsDest)
-                {
-                    sr2 = File.OpenText(pathCellfinal);
-                }
-                else
-                {
-                    sr2 = File.OpenText(pathCell);
-                }
-                using (StreamWriter sw = File.CreateText(pathCellfinal + ".tmp2"))
-                {
-                    string fileline1;
-                    string fileline2;
-                    while ((fileline1 = sr1.ReadLine()) != null)
-                    {
-                        while ((fileline2 = sr2.ReadLine()) != null)
-                        {
-                            if (fileline1.Trim() == fileline2.Trim() || fileline2.Contains("\t") || fileline1.Trim().Replace(" ", "") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("'", "&apos;") == fileline2.Trim().Replace(" ", "") || fileline1.Trim().Replace(" ", "").Replace("\"", "&quot;") == fileline2.Trim().Replace(" ", ""))
-                            {
-                                sw.WriteLine(fileline2);
-                                break;
-                            }
-                        }
-                    }
-                }
-                sr1.Close();
-                sr2.Close();
-                string replacementXML = File.ReadAllText(pathCellfinal + ".tmp2");
-                using (StreamWriter sw = File.CreateText(pathCellfinal))
-                {
-                    sw.Write(replacementXML);
-                }
-                File.Delete(pathCellfinal + ".tmp");
-                File.Delete(pathCellfinal + ".tmp2");
-
-            }
-            catch
-            {
-                MessageBox.Show("There was an error in the execution, please restart the app and try again.\nIf the issue persist please reach the dev.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
+                i++;
             }
         }
-
-        private void cleanButtonProcess(object sender, EventArgs e, int i, string matchLine, bool bkr, XmlDocument doc, XmlWriter writer, DataGridViewRow row, string pathCell, string type, string typeFile, bool srcAsDest, bool existDir)
-        {
-            try
-            {
-                if (type == "ReportType")
-                {
-                    string fieldMatched = matchLine.Replace("<field>", "");
-                    fieldMatched = fieldMatched.Replace("</field>", "");
-                    XmlNodeList NodeLista = doc.GetElementsByTagName(type);
-                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("sections");
-                    for (int lis = 0; lis < NodeLista2.Count && bkr == false; lis++)
-                    {
-                        XmlNodeList NodeLista3 = null;
-                        NodeLista3 = ((XmlElement)NodeLista2[i]).GetElementsByTagName("columns");
-                        foreach (XmlElement nodo in NodeLista3)
-                        {
-                            XmlNodeList nField = nodo.GetElementsByTagName("field");
-                            if (nField[0].InnerText.Contains(fieldMatched))
-                            {
-                                nodo.ParentNode.RemoveChild(nodo);
-                                fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
-                                bkr = true;
-                                break;
-                            }
-                        }
-                        i++;
-                    }
-                }
-                else if (type == "PermissionSet" || type == "Profile")
-                {
-                    string fieldMatched = matchLine.Replace("<field>", "");
-                    fieldMatched = fieldMatched.Replace("</field>", "");
-                    XmlNodeList NodeLista = doc.GetElementsByTagName(type);
-                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fieldPermissions");
-                    foreach (XmlElement nodo in NodeLista2)
-                    {
-                        XmlNodeList nField = nodo.GetElementsByTagName("field");
-                        if (nField[0].InnerText.Contains(fieldMatched))
-                        {
-                            nodo.ParentNode.RemoveChild(nodo);
-                            fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
-                            bkr = true;
-                            break;
-                        }
-                        i++;
-                    }
-                }
-                else if (type == "Report")
-                {
-                    string fieldMatched = matchLine.Replace("<field>", "");
-                    fieldMatched = fieldMatched.Replace("</field>", "");
-                    XmlNodeList NodeLista = doc.GetElementsByTagName(type);
-                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("columns");
-                    foreach (XmlElement nodo in NodeLista2)
-                    {
-                        XmlNodeList nField = nodo.GetElementsByTagName("field");
-                        if (nField[0].InnerText.Contains(fieldMatched))
-                        {
-                            nodo.ParentNode.RemoveChild(nodo);
-                            fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
-                            bkr = true;
-                            break;
-                        }
-                        i++;
-                    }
-                }
-                else if (type == "CustomObjectTranslation")
-                {
-                    string fieldMatched = matchLine.Replace("<name>", "");
-                    fieldMatched = fieldMatched.Replace("</name>", "");
-                    XmlNodeList NodeLista = doc.GetElementsByTagName(type);
-                    XmlNodeList NodeLista2 = ((XmlElement)NodeLista[0]).GetElementsByTagName("fields");
-                    foreach (XmlElement nodo in NodeLista2)
-                    {
-                        XmlNodeList nField = nodo.GetElementsByTagName("name");
-                        if (nField[0].InnerText.Contains(fieldMatched))
-                        {
-                            nodo.ParentNode.RemoveChild(nodo);
-                            fileRenew(sender, e, pathCell, doc, writer, typeFile, row, srcAsDest, existDir);
-                            bkr = true;
-                            break;
-                        }
-                        i++;
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("There was an error in the execution, please restart the app and try again.\nIf the issue persist please reach the dev.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
-        }
-
-        private void cleanButtonClick(object sender, EventArgs e)
-        {
-            try
-            {
-                bool srcAsDest = srcAsDestCheckBox.Checked;
-                bool existDir = false;
-                bool executeClean = false;
-                if (!srcAsDest)
-                {
-                    DialogResult result = SaveFolderDialog.ShowDialog();
-                    if (result == DialogResult.OK)
-                    {
-                        existDir = Directory.Exists(SaveFolderDialog.SelectedPath + "\\src");
-                    }
-                }
-                if (srcAsDest || existDir)
-                {
-                    DialogResult result2 = MessageBox.Show("This process will overwrite the checked files in the path selected.\r\nDo you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result2 == DialogResult.Yes)
-                    {
-                        executeClean = true;
-                    }
-                }
-                if (executeClean || !(srcAsDest || existDir || executeClean))
-                {
-                    Cursor.Current = Cursors.WaitCursor;
-                    if (MainDGV.Rows.Count != 0)
-                    {
-                        bool chkboxtrue = false;
-                        string field = FieldTextBox.Text.Trim();
-                        string component = ObjectTextBox.Text.Trim();
-                        foreach (DataGridViewRow row in MainDGV.Rows)
-                        {
-                            DataGridViewCheckBoxCell chkboxCell = row.Cells[0] as DataGridViewCheckBoxCell;
-                            if (Convert.ToBoolean(chkboxCell.Value))
-                            {
-                                chkboxtrue = true;
-                                int i = 0;
-                                bool bkr = false;
-                                XmlDocument doc = new XmlDocument();
-                                XmlWriter writer = null;
-                                string pathCell = row.Cells[5].Value.ToString();
-                                string matchLine = row.Cells[4].Value.ToString();
-                                doc.Load(pathCell);
-                                if (pathCell.Contains("\\reportTypes\\"))
-                                {
-                                    cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "ReportType", "reportTypes", srcAsDest, existDir);
-                                }
-                                else if (pathCell.Contains("\\permissionsets\\"))
-                                {
-                                    cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "PermissionSet", "permissionsets", srcAsDest, existDir);
-                                }
-                                else if (pathCell.Contains("\\reports\\"))
-                                {
-                                    cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "Report", "report", srcAsDest, existDir);
-                                }
-                                else if (pathCell.Contains("\\profiles\\"))
-                                {
-                                    cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "Profile", "profiles", srcAsDest, existDir);
-                                }
-                                else if (pathCell.Contains("\\objectTranslations\\"))
-                                {
-                                    cleanButtonProcess(sender, e, i, matchLine, bkr, doc, writer, row, pathCell, "CustomObjectTranslation", "objectTranslations", srcAsDest, existDir);
-                                }
-                            }
-                        }
-                        Cursor.Current = Cursors.Default;
-                        if (chkboxtrue)
-                        {
-                            MessageBox.Show("Task Completed!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            previewOn = false;
-                        }
-                        else
-                        {
-                            MessageBox.Show("There was no row checked", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("There was an error in the execution, please restart the app and try again.\nIf the issue persist please reach the dev.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
-        }
-
         private void selectAllButtonClick(object sender, EventArgs e)
         {
             try
@@ -689,7 +441,7 @@ namespace Field_Obliteration_Clean_Automation
                 Close();
             }
         }
-
+        /*
         private void previewDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -725,7 +477,7 @@ namespace Field_Obliteration_Clean_Automation
                 Close();
             }
         }
-
+        */
         private void mainApp_Load(object sender, EventArgs e)
         {
             try

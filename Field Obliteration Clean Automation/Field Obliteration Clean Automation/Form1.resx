@@ -133,19 +133,6 @@
         AAAASUVORK5CYII=
 </value>
   </data>
-  <data name="CleanButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGaSURBVDhPpZLbKwRhGMbHzP5jQjncKC2Rc8iFuFEu
-        CCWntWtXrVbkGHaRskrYJcvKSrlwDDlGRFsOoa2tfcwz2g+lIaZ+M9+87+955mYkAP9CuxUqtlKVNmNd
-        XclvoMuMKChQrJbD0Sf1CER+gBddZtTje0G+YrHuDAQRjkQQCod1oUOXGVGQp5g7tvru8KIKD6+vutCh
-        y4woyFVM9s3ua9yHQrh5fNSFDl1mREG23OzYcFziVv3CWTCoCx26zIiCLLmxO2A/x+nJA66en3WhQ5cZ
-        UZApN/T6bcfwNO/8CrrMiIIMuX7AZzlEa/oQWoyD38JdlPXOCzAjCoxy7fBC6x7MmSMIBNaxsuL/Amfc
-        jVf5Yc12YbXjBMyIgjS52jXftA1bzhi8Xh9qkjo1pqdnNTjjjgWOoikstx+BGVGQKldNelt2YS+YhNvt
-        0Z7E5XJrRGcs6C+bw5L5AMyIgpSYitjkmHJPfWLP/cTEPLqK3RpO54xGdMYCZ6UPi6Z90BcF6osUL5Uk
-        xEnFawaDwfQd3H1G9T9+pL8D6Q2kmNhCHYMLPgAAAABJRU5ErkJggg==
-</value>
-  </data>
   <metadata name="LoadFolderDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>293, 0</value>
   </metadata>
